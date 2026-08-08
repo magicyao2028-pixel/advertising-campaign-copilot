@@ -1,0 +1,164 @@
+{
+  "campaign_id": "SYNTH-CAMPAIGN-001",
+  "status": "ready_for_human_review",
+  "objective": "revenue",
+  "planning": {
+    "product": "Synthetic seasonal tea gift set",
+    "audience": "Returning marketplace buyers and high-intent search visitors",
+    "channels": [
+      "search",
+      "short_video",
+      "social_feed"
+    ],
+    "currency": "CNY",
+    "total_budget": 30000.0,
+    "budget_envelopes": [
+      {
+        "cell_id": "CELL-SEARCH-A",
+        "channel": "search",
+        "planned_budget": 10000.0
+      },
+      {
+        "cell_id": "CELL-VIDEO-B",
+        "channel": "short_video",
+        "planned_budget": 10000.0
+      },
+      {
+        "cell_id": "CELL-SOCIAL-C",
+        "channel": "social_feed",
+        "planned_budget": 10000.0
+      }
+    ],
+    "experiment_rule": "Change one primary variable per cell before interpreting uplift."
+  },
+  "creative_review": {
+    "release_blocked": false,
+    "violations": []
+  },
+  "performance_review": [
+    {
+      "cell_id": "CELL-SEARCH-A",
+      "channel": "search",
+      "creative_id": "CR-SEARCH-01",
+      "source_id": "PERF-2026-001",
+      "spend": 9000.0,
+      "impressions": 120000,
+      "clicks": 4200,
+      "conversions": 100,
+      "revenue": 30000.0,
+      "ctr": 0.035,
+      "conversion_rate": 0.0238,
+      "cpa": 90.0,
+      "roas": 3.33,
+      "target_cpa": 120.0,
+      "target_roas": 2.5
+    },
+    {
+      "cell_id": "CELL-VIDEO-B",
+      "channel": "short_video",
+      "creative_id": "CR-VIDEO-02",
+      "source_id": "PERF-2026-002",
+      "spend": 7000.0,
+      "impressions": 200000,
+      "clicks": 3000,
+      "conversions": 35,
+      "revenue": 9000.0,
+      "ctr": 0.015,
+      "conversion_rate": 0.0117,
+      "cpa": 200.0,
+      "roas": 1.29,
+      "target_cpa": 120.0,
+      "target_roas": 2.5
+    },
+    {
+      "cell_id": "CELL-SOCIAL-C",
+      "channel": "social_feed",
+      "creative_id": "CR-SOCIAL-03",
+      "source_id": "PERF-2026-003",
+      "spend": 4000.0,
+      "impressions": 180000,
+      "clicks": 2000,
+      "conversions": 0,
+      "revenue": 0.0,
+      "ctr": 0.0111,
+      "conversion_rate": 0.0,
+      "cpa": null,
+      "roas": 0.0,
+      "target_cpa": 120.0,
+      "target_roas": 2.5
+    }
+  ],
+  "optimization_recommendations": [
+    {
+      "cell_id": "CELL-SEARCH-A",
+      "action": "candidate_scale",
+      "reason": "ROAS and CPA both meet the declared targets.",
+      "recommended_budget_change_pct": 15.0,
+      "evidence_ids": [
+        "PERF-2026-001"
+      ],
+      "requires_human_approval": true,
+      "executed": false
+    },
+    {
+      "cell_id": "CELL-VIDEO-B",
+      "action": "hold_and_test",
+      "reason": "The cell does not yet meet both optimization targets.",
+      "recommended_budget_change_pct": 0.0,
+      "evidence_ids": [
+        "PERF-2026-002"
+      ],
+      "requires_human_approval": true,
+      "executed": false
+    },
+    {
+      "cell_id": "CELL-SOCIAL-C",
+      "action": "pause_and_review",
+      "reason": "No conversions after the minimum review-spend threshold.",
+      "recommended_budget_change_pct": 0.0,
+      "evidence_ids": [
+        "PERF-2026-003"
+      ],
+      "requires_human_approval": true,
+      "executed": false
+    }
+  ],
+  "constraints": [
+    "No automatic ad-platform write",
+    "No guaranteed performance claims",
+    "All budget changes require human approval"
+  ],
+  "governance": {
+    "human_owner": "Campaign Manager",
+    "human_approval_required": true,
+    "platform_write_executed": false,
+    "max_reallocation_pct": 20.0
+  },
+  "trace": [
+    {
+      "step": "validate_brief",
+      "status": "completed"
+    },
+    {
+      "step": "review_creative_claims",
+      "status": "completed"
+    },
+    {
+      "step": "calculate_performance",
+      "status": "completed"
+    },
+    {
+      "step": "draft_optimization",
+      "status": "completed"
+    },
+    {
+      "step": "request_human_approval",
+      "status": "required"
+    }
+  ],
+  "limitations": [
+    "All campaign and performance values are synthetic.",
+    "Rules are illustrative and do not replace platform policy or statistical review.",
+    "No ad-platform connection, budget change or creative publication is implemented."
+  ]
+}

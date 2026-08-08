@@ -1,0 +1,70 @@
+{
+  "campaign_id": "SYNTH-CAMPAIGN-001",
+  "objective": "revenue",
+  "product": "Synthetic seasonal tea gift set",
+  "audience": "Returning marketplace buyers and high-intent search visitors",
+  "currency": "CNY",
+  "total_budget": 30000,
+  "target_roas": 2.5,
+  "target_cpa": 120,
+  "max_reallocation_pct": 20,
+  "human_owner": "Campaign Manager",
+  "channels": ["search", "short_video", "social_feed"],
+  "constraints": [
+    "No automatic ad-platform write",
+    "No guaranteed performance claims",
+    "All budget changes require human approval"
+  ],
+  "creatives": [
+    {
+      "creative_id": "CR-SEARCH-01",
+      "headline": "Seasonal tea gift set",
+      "message": "Explore a synthetic gift-set campaign concept for the holiday period."
+    },
+    {
+      "creative_id": "CR-VIDEO-02",
+      "headline": "A calm tea ritual",
+      "message": "A short-video concept focused on packaging, origin story and serving moments."
+    },
+    {
+      "creative_id": "CR-SOCIAL-03",
+      "headline": "Gift planning guide",
+      "message": "A social-feed concept comparing synthetic gift occasions and package sizes."
+    }
+  ],
+  "performance": [
+    {
+      "cell_id": "CELL-SEARCH-A",
+      "channel": "search",
+      "creative_id": "CR-SEARCH-01",
+      "source_id": "PERF-2026-001",
+      "spend": 9000,
+      "impressions": 120000,
+      "clicks": 4200,
+      "conversions": 100,
+      "revenue": 30000
+    },
+    {
+      "cell_id": "CELL-VIDEO-B",
+      "channel": "short_video",
+      "creative_id": "CR-VIDEO-02",
+      "source_id": "PERF-2026-002",
+      "spend": 7000,
+      "impressions": 200000,
+      "clicks": 3000,
+      "conversions": 35,
+      "revenue": 9000
+    },
+    {
+      "cell_id": "CELL-SOCIAL-C",
+      "channel": "social_feed",
+      "creative_id": "CR-SOCIAL-03",
+      "source_id": "PERF-2026-003",
+      "spend": 4000,
+      "impressions": 180000,
+      "clicks": 2000,
+      "conversions": 0,
+      "revenue": 0
+    }
+  ]
+}

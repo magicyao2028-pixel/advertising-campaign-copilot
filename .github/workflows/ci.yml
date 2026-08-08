@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: python -m pip install -e .
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+      - name: Rebuild campaign review
+        run: campaign-copilot data/sample_campaign.json
+
+  validate-static-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate site files
+        run: test -f site/index.html && test -f site/styles.css

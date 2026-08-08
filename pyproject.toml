@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "advertising-campaign-copilot"
+version = "0.1.0"
+description = "Offline, reviewable campaign planning and optimization workflow."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "magicyao2028-pixel" }]
+dependencies = []
+
+[project.scripts]
+campaign-copilot = "campaign_copilot.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
