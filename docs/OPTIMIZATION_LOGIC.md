@@ -22,6 +22,19 @@ A scale candidate receives a suggested increase equal to the smaller of 15% and 
 
 The suggestion is informational. It does not calculate where the funding comes from and it never changes a live budget.
 
+## Period comparison
+
+The campaign declares one `reporting_period` in `YYYY-MM` format. Current observations must match it, and history must be earlier. A trend is calculated only when the same cell has an observation in the immediately preceding month and both channel and creative ID are unchanged.
+
+The review emits explicit warnings for:
+
+- no prior observation;
+- a missing observation in the reporting period;
+- a latest comparison period that is not adjacent;
+- a changed channel or creative dimension.
+
+Comparable records report percentage-point changes for CTR and CVR, and percentage changes for spend, CPA, and ROAS. A percentage change is `null` when its earlier denominator is zero or unavailable. These calculations are descriptive and do not establish incrementality, statistical significance, or future performance.
+
 ## Evidence and approval
 
 Each recommendation cites the performance cell's `source_id`, declares `requires_human_approval: true`, and declares `executed: false`.

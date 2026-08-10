@@ -20,8 +20,9 @@ When a team has a campaign objective, several creatives, and incomplete performa
 2. Divide the declared budget into experiment envelopes.
 3. flag a small set of prohibited creative claims.
 4. Calculate CTR, conversion rate, CPA, and ROAS.
-5. Draft bounded rule-based recommendations.
-6. Render machine-readable JSON and human-readable Markdown.
+5. Compare only compatible adjacent monthly observations and expose data gaps.
+6. Draft bounded rule-based recommendations.
+7. Render machine-readable JSON and human-readable Markdown.
 
 ## Acceptance criteria
 
@@ -30,6 +31,8 @@ When a team has a campaign objective, several creatives, and incomplete performa
 - a prohibited claim blocks recommendation release;
 - suggested increases never exceed the declared ceiling or 20%;
 - zero-conversion cells never qualify for scaling;
+- current and historical periods validate deterministically;
+- missing, non-adjacent, and changed-dimension comparisons are warnings rather than invented trends;
 - all recommendations require human approval and remain unexecuted;
 - the sample can be rebuilt offline with no paid API.
 

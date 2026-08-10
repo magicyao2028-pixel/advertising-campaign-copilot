@@ -8,7 +8,8 @@
     "channels": [
       "search",
       "short_video",
-      "social_feed"
+      "social_feed",
+      "marketplace"
     ],
     "currency": "CNY",
     "total_budget": 30000.0,
@@ -38,6 +39,7 @@
   "performance_review": [
     {
       "cell_id": "CELL-SEARCH-A",
+      "period": "2026-07",
       "channel": "search",
       "creative_id": "CR-SEARCH-01",
       "source_id": "PERF-2026-001",
@@ -55,6 +57,7 @@
     },
     {
       "cell_id": "CELL-VIDEO-B",
+      "period": "2026-07",
       "channel": "short_video",
       "creative_id": "CR-VIDEO-02",
       "source_id": "PERF-2026-002",
@@ -72,6 +75,7 @@
     },
     {
       "cell_id": "CELL-SOCIAL-C",
+      "period": "2026-07",
       "channel": "social_feed",
       "creative_id": "CR-SOCIAL-03",
       "source_id": "PERF-2026-003",
@@ -88,6 +92,59 @@
       "target_roas": 2.5
     }
   ],
+  "trend_review": {
+    "reporting_period": "2026-07",
+    "status": "warnings_present",
+    "comparable": [
+      {
+        "cell_id": "CELL-SEARCH-A",
+        "current_period": "2026-07",
+        "comparison_period": "2026-06",
+        "evidence_ids": [
+          "PERF-2026-004",
+          "PERF-2026-001"
+        ],
+        "changes": {
+          "spend_pct": 12.5,
+          "ctr_percentage_points": 0.5,
+          "conversion_rate_percentage_points": -0.04,
+          "cpa_pct": -10.0,
+          "roas_pct": 14.83
+        }
+      }
+    ],
+    "warnings": [
+      {
+        "cell_id": "CELL-MARKETPLACE-D",
+        "code": "latest_period_missing",
+        "message": "No observation exists for reporting period 2026-07.",
+        "latest_available_period": "2026-06",
+        "evidence_ids": [
+          "PERF-2026-006"
+        ]
+      },
+      {
+        "cell_id": "CELL-SOCIAL-C",
+        "code": "no_prior_period",
+        "message": "No earlier observation is available for comparison.",
+        "latest_available_period": "2026-07",
+        "evidence_ids": [
+          "PERF-2026-003"
+        ]
+      },
+      {
+        "cell_id": "CELL-VIDEO-B",
+        "code": "non_adjacent_periods",
+        "message": "The latest available history is not the immediately preceding month.",
+        "latest_available_period": "2026-07",
+        "comparison_period": "2026-05",
+        "evidence_ids": [
+          "PERF-2026-005",
+          "PERF-2026-002"
+        ]
+      }
+    ]
+  },
   "optimization_recommendations": [
     {
       "cell_id": "CELL-SEARCH-A",
@@ -148,6 +205,10 @@
       "status": "completed"
     },
     {
+      "step": "compare_periods",
+      "status": "warnings_present"
+    },
+    {
       "step": "draft_optimization",
       "status": "completed"
     },
@@ -159,6 +220,7 @@
   "limitations": [
     "All campaign and performance values are synthetic.",
     "Rules are illustrative and do not replace platform policy or statistical review.",
+    "Period changes are descriptive and do not establish causality or forecast results.",
     "No ad-platform connection, budget change or creative publication is implemented."
   ]
 }

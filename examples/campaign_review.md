@@ -3,6 +3,7 @@
 **Campaign:** SYNTH-CAMPAIGN-001
 **Status:** ready_for_human_review
 **Objective:** revenue
+**Reporting period:** 2026-07
 
 ## Plan
 
@@ -16,6 +17,16 @@
 - **CELL-SEARCH-A** - CTR 3.50%, CVR 2.38%, CPA 90.00, ROAS 3.33 [PERF-2026-001]
 - **CELL-VIDEO-B** - CTR 1.50%, CVR 1.17%, CPA 200.00, ROAS 1.29 [PERF-2026-002]
 - **CELL-SOCIAL-C** - CTR 1.11%, CVR 0.00%, CPA n/a, ROAS 0.00 [PERF-2026-003]
+
+## Comparable period changes
+
+- **CELL-SEARCH-A** (2026-06 to 2026-07): CTR +0.50 pp, CVR -0.04 pp, CPA -10.00%, ROAS +14.83%. [PERF-2026-004] [PERF-2026-001]
+
+## Trend warnings
+
+- **CELL-MARKETPLACE-D - latest_period_missing**: No observation exists for reporting period 2026-07. [PERF-2026-006]
+- **CELL-SOCIAL-C - no_prior_period**: No earlier observation is available for comparison. [PERF-2026-003]
+- **CELL-VIDEO-B - non_adjacent_periods**: The latest available history is not the immediately preceding month. [PERF-2026-005] [PERF-2026-002]
 
 ## Optimization recommendations
 

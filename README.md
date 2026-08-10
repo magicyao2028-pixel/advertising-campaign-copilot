@@ -1,6 +1,6 @@
 # Advertising Campaign Copilot
 
-An offline, reviewable prototype that turns a structured campaign brief and synthetic performance data into a campaign plan, metric audit, creative-claim gate, and bounded optimization recommendations.
+An offline, reviewable prototype that turns a structured campaign brief and synthetic multi-period performance data into a campaign plan, metric audit, trend check, creative-claim gate, and bounded optimization recommendations.
 
 **中文介绍：** 面向中小企业广告投放规划与复盘的 AI 应用原型。它将广告需求、创意、预算和模拟投放数据整理成可审核的计划与优化建议；所有调整均需人工批准，不连接真实广告账户，不产生真实投放或业绩。
 
@@ -15,6 +15,7 @@ The business scenario is an internal AI-application exploration for Changsha Shi
 - structured campaign briefs and explicit KPI targets;
 - per-cell budget envelopes and one-variable experiment guidance;
 - CTR, CVR, CPA, and ROAS calculations with source identifiers;
+- adjacent-period comparisons plus explicit missing, non-adjacent, and incompatible-data warnings;
 - a basic creative-claim release gate;
 - bounded recommendations: scale candidate, hold and test, or pause and review;
 - mandatory human approval and zero platform writes;
@@ -58,7 +59,7 @@ Campaign brief
 
 ## Honest boundaries
 
-This is a portfolio prototype, not a production ad-buying system. It does not call an LLM, estimate causal uplift, guarantee performance, connect to an ad platform, modify budgets, publish creatives, or store customer data. The deterministic engine is intentionally narrow so its decisions can be inspected and tested. See [the architecture](docs/ARCHITECTURE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md) for the planned path.
+This is a portfolio prototype, not a production ad-buying system. It does not call an LLM, estimate causal uplift, forecast performance, guarantee results, connect to an ad platform, modify budgets, publish creatives, or store customer data. Its period changes are descriptive only. The deterministic engine is intentionally narrow so its decisions can be inspected and tested. See [the architecture](docs/ARCHITECTURE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md) for the planned path.
 
 ## License
 

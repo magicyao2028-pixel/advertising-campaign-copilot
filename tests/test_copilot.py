@@ -32,6 +32,55 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertEqual(cell["ctr"], 0.035)
         self.assertEqual(cell["cpa"], 90.0)
         self.assertEqual(cell["roas"], 3.33)
+        self.assertEqual(cell["period"], "2026-07")
+
+    def test_calculates_adjacent_period_changes_with_sources(self):
+        result = CampaignCopilot().review(load_campaign(SAMPLE))
+        trend = next(
+            item for item in result["trend_review"]["comparable"]
+            if item["cell_id"] == "CELL-SEARCH-A"
+        )
+        self.assertEqual(trend["comparison_period"], "2026-06")
+        self.assertEqual(trend["current_period"], "2026-07")
+        self.assertEqual(trend["evidence_ids"], ["PERF-2026-004", "PERF-2026-001"])
+        self.assertEqual(trend["changes"]["ctr_percentage_points"], 0.5)
+        self.assertEqual(trend["changes"]["roas_pct"], 14.83)
+
+    def test_warns_when_periods_are_not_adjacent(self):
+        result = CampaignCopilot().review(load_campaign(SAMPLE))
+        warning = next(
+            item for item in result["trend_review"]["warnings"]
+            if item["cell_id"] == "CELL-VIDEO-B"
+        )
+        self.assertEqual(warning["code"], "non_adjacent_periods")
+        self.assertEqual(warning["comparison_period"], "2026-05")
+
+    def test_warns_when_latest_period_is_missing(self):
+        result = CampaignCopilot().review(load_campaign(SAMPLE))
+        warning = next(
+            item for item in result["trend_review"]["warnings"]
+            if item["cell_id"] == "CELL-MARKETPLACE-D"
+        )
+        self.assertEqual(warning["code"], "latest_period_missing")
+        self.assertEqual(warning["latest_available_period"], "2026-06")
+
+    def test_warns_when_no_prior_period_exists(self):
+        result = CampaignCopilot().review(load_campaign(SAMPLE))
+        warning = next(
+            item for item in result["trend_review"]["warnings"]
+            if item["cell_id"] == "CELL-SOCIAL-C"
+        )
+        self.assertEqual(warning["code"], "no_prior_period")
+
+    def test_warns_when_comparison_dimensions_changed(self):
+        payload = sample_payload()
+        payload["performance_history"][0]["creative_id"] = "CR-VIDEO-02"
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        warning = next(
+            item for item in result["trend_review"]["warnings"]
+            if item["cell_id"] == "CELL-SEARCH-A"
+        )
+        self.assertEqual(warning["code"], "incompatible_dimensions")
 
     def test_scale_recommendation_is_bounded_and_not_executed(self):
         result = CampaignCopilot().review(load_campaign(SAMPLE))
@@ -102,11 +151,39 @@ class CampaignCopilotTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "no more than 20"):
             CampaignBrief.from_mapping(payload)
 
+    def test_rejects_invalid_reporting_period(self):
+        payload = sample_payload()
+        payload["reporting_period"] = "2026-13"
+        with self.assertRaisesRegex(ValueError, "YYYY-MM"):
+            CampaignBrief.from_mapping(payload)
+
+    def test_rejects_current_observation_outside_reporting_period(self):
+        payload = sample_payload()
+        payload["performance"][0]["period"] = "2026-06"
+        with self.assertRaisesRegex(ValueError, "match reporting_period"):
+            CampaignBrief.from_mapping(payload)
+
+    def test_rejects_history_at_or_after_reporting_period(self):
+        payload = sample_payload()
+        payload["performance_history"][0]["period"] = "2026-07"
+        with self.assertRaisesRegex(ValueError, "earlier than reporting_period"):
+            CampaignBrief.from_mapping(payload)
+
+    def test_rejects_duplicate_cell_period_observation(self):
+        payload = sample_payload()
+        duplicate = dict(payload["performance_history"][0])
+        duplicate["source_id"] = "PERF-2026-DUPLICATE"
+        payload["performance_history"].append(duplicate)
+        with self.assertRaisesRegex(ValueError, "cell_id and period"):
+            CampaignBrief.from_mapping(payload)
+
     def test_markdown_contains_metric_sources_and_governance(self):
         markdown = render_markdown(CampaignCopilot().review(load_campaign(SAMPLE)))
         self.assertIn("[PERF-2026-001]", markdown)
         self.assertIn("Platform write executed: no", markdown)
         self.assertIn("All inputs and performance values are synthetic", markdown)
+        self.assertIn("Comparable period changes", markdown)
+        self.assertIn("latest_period_missing", markdown)
 
 
 if __name__ == "__main__":

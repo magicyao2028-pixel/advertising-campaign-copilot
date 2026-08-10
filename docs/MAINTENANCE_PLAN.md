@@ -4,7 +4,7 @@ v0.1 is intentionally narrow. The following ten rounds provide visible room for 
 
 | Round | Planned increment | Status |
 | --- | --- | --- |
-| M1 | Add multi-period performance history and trend checks | Planned |
+| M1 | Add multi-period performance history and trend checks | Complete in v0.2 |
 | M2 | Add objective-specific scoring and recommendation policies | Planned |
 | M3 | Expand creative-claim taxonomy with policy evidence | Planned |
 | M4 | Add minimum-sample and experiment-quality checks | Planned |
@@ -15,6 +15,6 @@ v0.1 is intentionally narrow. The following ten rounds provide visible room for 
 | M9 | Add concurrency controls, observability, and failure recovery | Planned |
 | M10 | Prepare a controlled synthetic pilot and evaluation report | Planned |
 
-**Current maintenance count: 0/10.**
+**Current maintenance count: 1/10.**
 
 Every round should preserve the current tests, add focused tests for the new risk, update the example, and document honest boundaries. A future model adapter must not turn ungrounded text into an executable instruction.

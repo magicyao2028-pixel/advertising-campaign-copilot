@@ -1,5 +1,6 @@
 {
   "campaign_id": "SYNTH-CAMPAIGN-001",
+  "reporting_period": "2026-07",
   "objective": "revenue",
   "product": "Synthetic seasonal tea gift set",
   "audience": "Returning marketplace buyers and high-intent search visitors",
@@ -9,7 +10,7 @@
   "target_cpa": 120,
   "max_reallocation_pct": 20,
   "human_owner": "Campaign Manager",
-  "channels": ["search", "short_video", "social_feed"],
+  "channels": ["search", "short_video", "social_feed", "marketplace"],
   "constraints": [
     "No automatic ad-platform write",
     "No guaranteed performance claims",
@@ -30,11 +31,17 @@
       "creative_id": "CR-SOCIAL-03",
       "headline": "Gift planning guide",
       "message": "A social-feed concept comparing synthetic gift occasions and package sizes."
+    },
+    {
+      "creative_id": "CR-MARKET-04",
+      "headline": "Tea gift selection page",
+      "message": "A synthetic marketplace concept showing gift occasions and package details."
     }
   ],
   "performance": [
     {
       "cell_id": "CELL-SEARCH-A",
+      "period": "2026-07",
       "channel": "search",
       "creative_id": "CR-SEARCH-01",
       "source_id": "PERF-2026-001",
@@ -46,6 +53,7 @@
     },
     {
       "cell_id": "CELL-VIDEO-B",
+      "period": "2026-07",
       "channel": "short_video",
       "creative_id": "CR-VIDEO-02",
       "source_id": "PERF-2026-002",
@@ -57,6 +65,7 @@
     },
     {
       "cell_id": "CELL-SOCIAL-C",
+      "period": "2026-07",
       "channel": "social_feed",
       "creative_id": "CR-SOCIAL-03",
       "source_id": "PERF-2026-003",
@@ -65,6 +74,44 @@
       "clicks": 2000,
       "conversions": 0,
       "revenue": 0
+    }
+  ],
+  "performance_history": [
+    {
+      "cell_id": "CELL-SEARCH-A",
+      "period": "2026-06",
+      "channel": "search",
+      "creative_id": "CR-SEARCH-01",
+      "source_id": "PERF-2026-004",
+      "spend": 8000,
+      "impressions": 110000,
+      "clicks": 3300,
+      "conversions": 80,
+      "revenue": 23200
+    },
+    {
+      "cell_id": "CELL-VIDEO-B",
+      "period": "2026-05",
+      "channel": "short_video",
+      "creative_id": "CR-VIDEO-02",
+      "source_id": "PERF-2026-005",
+      "spend": 6000,
+      "impressions": 170000,
+      "clicks": 2550,
+      "conversions": 30,
+      "revenue": 8400
+    },
+    {
+      "cell_id": "CELL-MARKETPLACE-D",
+      "period": "2026-06",
+      "channel": "marketplace",
+      "creative_id": "CR-MARKET-04",
+      "source_id": "PERF-2026-006",
+      "spend": 3000,
+      "impressions": 90000,
+      "clicks": 1800,
+      "conversions": 25,
+      "revenue": 6000
     }
   ]
 }

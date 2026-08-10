@@ -9,6 +9,7 @@ JSON brief
   -> CampaignBrief validation
   -> creative claim gate
   -> metric engine
+  -> adjacent-period comparability check
   -> recommendation rules
   -> JSON + Markdown reports
   -> human decision
@@ -19,7 +20,7 @@ JSON brief
 | Component | Responsibility |
 | --- | --- |
 | `models.py` | Parse types and validate identities, relationships, budget, and funnel counts |
-| `copilot.py` | Review claims, calculate metrics, draft bounded recommendations, emit trace |
+| `copilot.py` | Review claims, calculate metrics and period changes, draft bounded recommendations, emit trace |
 | `report.py` | Render a decision-readable Markdown report with evidence IDs |
 | `cli.py` | Provide a reproducible local entry point and write output artifacts |
 
@@ -33,7 +34,9 @@ The word *copilot* describes a reviewable application workflow. v0.1 uses determ
 - no network request is performed by the application;
 - no credentials are required;
 - outputs contain recommendations, not commands;
-- `platform_write_executed` is always `false` in v0.1.
+- `platform_write_executed` is always `false` in v0.2.
+- only adjacent monthly observations with unchanged channel and creative are compared;
+- missing or incompatible observations remain visible as warnings instead of being silently interpolated.
 
 ## Production gaps
 
