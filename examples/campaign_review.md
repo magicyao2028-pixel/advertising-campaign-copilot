@@ -3,6 +3,7 @@
 **Campaign:** SYNTH-CAMPAIGN-001
 **Status:** ready_for_human_review
 **Objective:** revenue
+**Outcome type:** purchase
 **Reporting period:** 2026-07
 
 ## Plan
@@ -11,6 +12,13 @@
 - Audience: Returning marketplace buyers and high-intent search visitors
 - Total budget: CNY 30,000.00
 - Experiment rule: Change one primary variable per cell before interpreting uplift.
+
+## Objective policy
+
+- Policy: OBJ-REV-001
+- Required outcome type: purchase
+- Scale score: 100
+- Rationale: Prioritize revenue efficiency while retaining a CPA guardrail.
 
 ## Performance review
 
@@ -30,9 +38,9 @@
 
 ## Optimization recommendations
 
-- **CELL-SEARCH-A - candidate_scale**: ROAS and CPA both meet the declared targets. Suggested budget change 15.0%. [PERF-2026-001]
-- **CELL-VIDEO-B - hold_and_test**: The cell does not yet meet both optimization targets. Suggested budget change 0.0%. [PERF-2026-002]
-- **CELL-SOCIAL-C - pause_and_review**: No conversions after the minimum review-spend threshold. Suggested budget change 0.0%. [PERF-2026-003]
+- **CELL-SEARCH-A - candidate_scale**: All weighted factors in OBJ-REV-001 meet the declared thresholds. Policy score 100/100; suggested budget change 15.0%. [PERF-2026-001]
+- **CELL-VIDEO-B - hold_and_test**: The cell does not meet every scale factor in OBJ-REV-001. Policy score 0/100; suggested budget change 0.0%. [PERF-2026-002]
+- **CELL-SOCIAL-C - pause_and_review**: No conversions after the minimum review-spend threshold. Policy score 0/100; suggested budget change 0.0%. [PERF-2026-003]
 
 ## Governance
 

@@ -2,9 +2,9 @@
 
 ## Current state
 
-- Release: v0.2.0
-- Maintenance rounds completed: 1/10
-- M1: multi-period performance history and transparent trend checks
+- Release: v0.3.0
+- Maintenance rounds completed: 2/10
+- M2: objective-specific policies, explicit outcome semantics, and inspectable weighted scores
 - Runtime: offline Python 3.10+, no runtime dependencies
 - Data: synthetic only
 - External writes: none
@@ -19,23 +19,22 @@ python -m campaign_copilot.cli data/sample_campaign.json \
   --markdown-output examples/campaign_review.md
 ```
 
-## M1 evidence
+## M2 evidence
 
-- current observations are tied to a declared `reporting_period`;
-- history must be earlier and cell-period/source identities are unique;
-- only adjacent monthly records with unchanged dimensions are compared;
-- no-prior, missing-latest, period-gap, and changed-dimension cases are explicit warnings;
-- period changes cite both source observations and remain descriptive.
+- revenue uses ROAS plus a CPA guardrail under `OBJ-REV-001`;
+- conversions use CPA plus a recorded-conversion gate under `OBJ-CONV-001`;
+- leads require `qualified_lead` outcome semantics under `OBJ-LEAD-001`;
+- each recommendation exposes factor weights, observed values, thresholds, pass/fail states, and total score;
+- all existing period warnings, claim gates, human approval, and zero-write boundaries remain active.
 
 ## Next authorized maintenance round
 
-M2: make recommendation scoring depend on the declared campaign objective while preserving the current approval and execution boundaries. Do not add an LLM, forecasting, persistence, or a live connector in M2.
+M3: expand the creative-claim taxonomy with policy evidence. Preserve objective policies, period comparability, approval, and execution boundaries. Do not add forecasting, persistence, or a live connector in M3.
 
-## Completion gate for M2
+## Completion gate for M3
 
-- objective-specific policies are explicit and tested;
-- identical evidence produces deterministic decisions;
-- unsupported objectives fail safely;
-- examples and the static site show why a policy was selected;
+- claim categories and policy references are explicit and tested;
+- unsupported or high-risk claims fail safely;
+- examples and the static site show why a claim was blocked;
 - old and new tests pass;
-- maintenance count advances to 2/10 only after publication is verified.
+- maintenance count advances to 3/10 only after publication is verified.

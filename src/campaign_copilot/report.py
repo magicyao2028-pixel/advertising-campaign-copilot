@@ -10,6 +10,7 @@ def render_markdown(result: dict[str, Any]) -> str:
         f"**Campaign:** {result['campaign_id']}",
         f"**Status:** {result['status']}",
         f"**Objective:** {result['objective']}",
+        f"**Outcome type:** {result['outcome_type']}",
         f"**Reporting period:** {result['trend_review']['reporting_period']}",
         "",
         "## Plan",
@@ -18,6 +19,13 @@ def render_markdown(result: dict[str, Any]) -> str:
         f"- Audience: {result['planning']['audience']}",
         f"- Total budget: {result['planning']['currency']} {result['planning']['total_budget']:,.2f}",
         f"- Experiment rule: {result['planning']['experiment_rule']}",
+        "",
+        "## Objective policy",
+        "",
+        f"- Policy: {result['objective_policy']['policy_id']}",
+        f"- Required outcome type: {result['objective_policy']['required_outcome_type']}",
+        f"- Scale score: {result['objective_policy']['scale_score']}",
+        f"- Rationale: {result['objective_policy']['explanation']}",
         "",
         "## Performance review",
         "",
@@ -56,7 +64,8 @@ def render_markdown(result: dict[str, Any]) -> str:
             citations = " ".join(f"[{source}]" for source in item["evidence_ids"])
             lines.append(
                 f"- **{item['cell_id']} - {item['action']}**: {item['reason']} "
-                f"Suggested budget change {item['recommended_budget_change_pct']:.1f}%. {citations}"
+                f"Policy score {item['policy_score']['score']}/{item['policy_score']['scale_score']}; "
+                f"suggested budget change {item['recommended_budget_change_pct']:.1f}%. {citations}"
             )
     lines.extend([
         "",

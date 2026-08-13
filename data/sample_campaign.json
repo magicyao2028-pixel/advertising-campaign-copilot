@@ -2,6 +2,7 @@
   "campaign_id": "SYNTH-CAMPAIGN-001",
   "reporting_period": "2026-07",
   "objective": "revenue",
+  "outcome_type": "purchase",
   "product": "Synthetic seasonal tea gift set",
   "audience": "Returning marketplace buyers and high-intent search visitors",
   "currency": "CNY",

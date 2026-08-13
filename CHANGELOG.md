@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 - 2026-08-13
+
+- Added versioned policies for revenue, conversion, and qualified-lead objectives.
+- Added explicit objective-to-outcome semantic validation.
+- Added weighted, inspectable policy factors and deterministic scores to every recommendation.
+- Preserved claim blocking, bounded budget changes, human approval, and zero platform writes.
+- Expanded the test suite from 21 to 26 cases and updated reports and the public demo.
+
 ## 0.2.0 - 2026-08-10
 
 - Added validated reporting periods and multi-period synthetic performance history.

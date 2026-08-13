@@ -6,6 +6,8 @@
 - The repository contains only synthetic campaign and performance data.
 - No API token, advertising credential, customer identifier, or payment data is required.
 - No platform write, creative publication, or budget mutation is implemented.
+- Objective/outcome mismatches are rejected before a recommendation is drafted.
+- Policy scores are review evidence only and never authorize an external action.
 
 ## Safe-use rules
 

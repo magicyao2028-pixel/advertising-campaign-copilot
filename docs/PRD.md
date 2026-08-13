@@ -14,7 +14,7 @@ Advertising Campaign Copilot helps a small business team translate a campaign br
 
 When a team has a campaign objective, several creatives, and incomplete performance data, create one reviewable package that shows the plan, calculations, supporting source IDs, proposed action, and approval boundary.
 
-## v0.1 scope
+## v0.3 scope
 
 1. Validate a structured JSON campaign brief.
 2. Divide the declared budget into experiment envelopes.
@@ -23,6 +23,9 @@ When a team has a campaign objective, several creatives, and incomplete performa
 5. Compare only compatible adjacent monthly observations and expose data gaps.
 6. Draft bounded rule-based recommendations.
 7. Render machine-readable JSON and human-readable Markdown.
+8. Select a versioned policy from the declared objective.
+9. Reject objective/outcome semantic mismatches.
+10. Expose weighted factor evidence and deterministic policy scores.
 
 ## Acceptance criteria
 
@@ -34,6 +37,8 @@ When a team has a campaign objective, several creatives, and incomplete performa
 - current and historical periods validate deterministically;
 - missing, non-adjacent, and changed-dimension comparisons are warnings rather than invented trends;
 - all recommendations require human approval and remain unexecuted;
+- revenue, conversion, and lead objectives select different explicit policies;
+- lead scoring accepts only `qualified_lead` outcomes;
 - the sample can be rebuilt offline with no paid API.
 
 ## Out of scope

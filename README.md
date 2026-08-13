@@ -10,7 +10,7 @@ Many small teams need a transparent workflow before they need a fully autonomous
 
 The business scenario is an internal AI-application exploration for Changsha Shiju Trading Co., Ltd. All names, campaign inputs, performance values, and outputs in the repository are synthetic.
 
-## What v0.1 demonstrates
+## What v0.3 demonstrates
 
 - structured campaign briefs and explicit KPI targets;
 - per-cell budget envelopes and one-variable experiment guidance;
@@ -18,6 +18,8 @@ The business scenario is an internal AI-application exploration for Changsha Shi
 - adjacent-period comparisons plus explicit missing, non-adjacent, and incompatible-data warnings;
 - a basic creative-claim release gate;
 - bounded recommendations: scale candidate, hold and test, or pause and review;
+- objective-specific policies with visible factors, weights, thresholds and scores;
+- explicit outcome semantics so lead policies cannot silently score purchase events;
 - mandatory human approval and zero platform writes;
 - deterministic tests and a static public demo.
 
@@ -38,6 +40,7 @@ The package has no runtime dependencies and requires Python 3.10 or later.
 ```text
 Campaign brief
   -> schema and relationship validation
+  -> objective/outcome policy selection
   -> creative claim review
   -> synthetic metric calculation
   -> bounded recommendation draft
@@ -59,7 +62,7 @@ Campaign brief
 
 ## Honest boundaries
 
-This is a portfolio prototype, not a production ad-buying system. It does not call an LLM, estimate causal uplift, forecast performance, guarantee results, connect to an ad platform, modify budgets, publish creatives, or store customer data. Its period changes are descriptive only. The deterministic engine is intentionally narrow so its decisions can be inspected and tested. See [the architecture](docs/ARCHITECTURE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md) for the planned path.
+This is a portfolio prototype, not a production ad-buying system. It does not call an LLM, estimate causal uplift, forecast performance, guarantee results, connect to an ad platform, modify budgets, publish creatives, or store customer data. Its period changes and objective scores are deterministic review aids, not proof of causal performance. See [the objective policies](docs/OBJECTIVE_POLICIES.md), [architecture](docs/ARCHITECTURE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md).
 
 ## License
 

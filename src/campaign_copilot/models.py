@@ -8,6 +8,7 @@ from typing import Any
 
 
 OBJECTIVES = {"conversions", "revenue", "leads"}
+OUTCOME_TYPES = {"purchase", "conversion", "qualified_lead"}
 CHANNELS = {"search", "short_video", "social_feed", "marketplace"}
 PERIOD_PATTERN = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
 
@@ -74,6 +75,7 @@ class CampaignBrief:
     campaign_id: str
     reporting_period: str
     objective: str
+    outcome_type: str
     product: str
     audience: str
     currency: str
@@ -106,6 +108,7 @@ class CampaignBrief:
             campaign_id=str(value.get("campaign_id", "")).strip(),
             reporting_period=str(value.get("reporting_period", "")).strip(),
             objective=str(value.get("objective", "")).strip(),
+            outcome_type=str(value.get("outcome_type", "")).strip(),
             product=str(value.get("product", "")).strip(),
             audience=str(value.get("audience", "")).strip(),
             currency=str(value.get("currency", "")).strip().upper(),
@@ -125,6 +128,14 @@ class CampaignBrief:
         validate_period(item.reporting_period, "reporting_period")
         if item.objective not in OBJECTIVES:
             raise ValueError(f"objective must be one of: {', '.join(sorted(OBJECTIVES))}")
+        if item.outcome_type not in OUTCOME_TYPES:
+            raise ValueError(f"outcome_type must be one of: {', '.join(sorted(OUTCOME_TYPES))}")
+        expected_outcome = {"revenue": "purchase", "conversions": "conversion", "leads": "qualified_lead"}[item.objective]
+        if item.outcome_type != expected_outcome:
+            raise ValueError(
+                f"objective {item.objective} requires outcome_type {expected_outcome}; "
+                f"received {item.outcome_type}"
+            )
         if min(item.total_budget, item.target_roas, item.target_cpa) <= 0:
             raise ValueError("budget, target_roas and target_cpa must be positive")
         if not 0 < item.max_reallocation_pct <= 20:

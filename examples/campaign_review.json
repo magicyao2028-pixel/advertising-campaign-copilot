@@ -2,6 +2,18 @@
   "campaign_id": "SYNTH-CAMPAIGN-001",
   "status": "ready_for_human_review",
   "objective": "revenue",
+  "outcome_type": "purchase",
+  "objective_policy": {
+    "policy_id": "OBJ-REV-001",
+    "objective": "revenue",
+    "required_outcome_type": "purchase",
+    "scale_score": 100,
+    "factor_weights": {
+      "roas_target_met": 60,
+      "cpa_guardrail_met": 40
+    },
+    "explanation": "Prioritize revenue efficiency while retaining a CPA guardrail."
+  },
   "planning": {
     "product": "Synthetic seasonal tea gift set",
     "audience": "Returning marketplace buyers and high-intent search visitors",
@@ -149,7 +161,31 @@
     {
       "cell_id": "CELL-SEARCH-A",
       "action": "candidate_scale",
-      "reason": "ROAS and CPA both meet the declared targets.",
+      "reason": "All weighted factors in OBJ-REV-001 meet the declared thresholds.",
+      "objective": "revenue",
+      "objective_policy_id": "OBJ-REV-001",
+      "policy_score": {
+        "score": 100,
+        "scale_score": 100,
+        "factors": [
+          {
+            "factor": "roas_target_met",
+            "weight": 60,
+            "observed": 3.33,
+            "operator": ">=",
+            "threshold": 2.5,
+            "passed": true
+          },
+          {
+            "factor": "cpa_guardrail_met",
+            "weight": 40,
+            "observed": 90.0,
+            "operator": "<=",
+            "threshold": 120.0,
+            "passed": true
+          }
+        ]
+      },
       "recommended_budget_change_pct": 15.0,
       "evidence_ids": [
         "PERF-2026-001"
@@ -160,7 +196,31 @@
     {
       "cell_id": "CELL-VIDEO-B",
       "action": "hold_and_test",
-      "reason": "The cell does not yet meet both optimization targets.",
+      "reason": "The cell does not meet every scale factor in OBJ-REV-001.",
+      "objective": "revenue",
+      "objective_policy_id": "OBJ-REV-001",
+      "policy_score": {
+        "score": 0,
+        "scale_score": 100,
+        "factors": [
+          {
+            "factor": "roas_target_met",
+            "weight": 60,
+            "observed": 1.29,
+            "operator": ">=",
+            "threshold": 2.5,
+            "passed": false
+          },
+          {
+            "factor": "cpa_guardrail_met",
+            "weight": 40,
+            "observed": 200.0,
+            "operator": "<=",
+            "threshold": 120.0,
+            "passed": false
+          }
+        ]
+      },
       "recommended_budget_change_pct": 0.0,
       "evidence_ids": [
         "PERF-2026-002"
@@ -172,6 +232,30 @@
       "cell_id": "CELL-SOCIAL-C",
       "action": "pause_and_review",
       "reason": "No conversions after the minimum review-spend threshold.",
+      "objective": "revenue",
+      "objective_policy_id": "OBJ-REV-001",
+      "policy_score": {
+        "score": 0,
+        "scale_score": 100,
+        "factors": [
+          {
+            "factor": "roas_target_met",
+            "weight": 60,
+            "observed": 0.0,
+            "operator": ">=",
+            "threshold": 2.5,
+            "passed": false
+          },
+          {
+            "factor": "cpa_guardrail_met",
+            "weight": 40,
+            "observed": null,
+            "operator": "<=",
+            "threshold": 120.0,
+            "passed": false
+          }
+        ]
+      },
       "recommended_budget_change_pct": 0.0,
       "evidence_ids": [
         "PERF-2026-003"
@@ -203,6 +287,10 @@
     {
       "step": "calculate_performance",
       "status": "completed"
+    },
+    {
+      "step": "select_objective_policy",
+      "status": "OBJ-REV-001"
     },
     {
       "step": "compare_periods",

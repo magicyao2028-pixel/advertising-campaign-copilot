@@ -13,8 +13,11 @@ Division-by-zero cases are handled explicitly. These descriptive metrics do not 
 
 1. A prohibited creative phrase blocks the release of every optimization recommendation.
 2. A cell with zero conversions after spending at least 10% of the total campaign budget becomes `pause_and_review`.
-3. A cell becomes `candidate_scale` only when CPA exists, CPA is no higher than target, and ROAS is no lower than target.
-4. Every other cell becomes `hold_and_test`.
+3. The declared objective selects one versioned policy and verifies its required outcome type.
+4. A cell becomes `candidate_scale` only when every weighted factor in that policy passes and the score reaches 100.
+5. Every other cell becomes `hold_and_test`.
+
+See [Objective Policies](OBJECTIVE_POLICIES.md) for exact factors and weights.
 
 ## Budget guardrail
 

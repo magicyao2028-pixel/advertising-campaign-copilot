@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from .models import CampaignBrief, Creative, PerformanceCell, period_index
+from .objective_policies import get_objective_policy, score_cell
 
 
 PROHIBITED_PHRASES = {
@@ -21,12 +22,17 @@ class CampaignCopilot:
         envelopes = self._budget_envelopes(campaign)
         cells = [self._evaluate_cell(cell, campaign) for cell in campaign.performance]
         trend_review = self._trend_review(campaign)
+        objective_policy = get_objective_policy(campaign.objective)
         status = "blocked_claim_review" if violations else "ready_for_human_review"
-        recommendations = [] if violations else [self._recommendation(cell, campaign) for cell in cells]
+        recommendations = [] if violations else [
+            self._recommendation(cell, campaign, objective_policy) for cell in cells
+        ]
         return {
             "campaign_id": campaign.campaign_id,
             "status": status,
             "objective": campaign.objective,
+            "outcome_type": campaign.outcome_type,
+            "objective_policy": objective_policy.to_dict(),
             "planning": {
                 "product": campaign.product,
                 "audience": campaign.audience,
@@ -54,6 +60,7 @@ class CampaignCopilot:
                 {"step": "validate_brief", "status": "completed"},
                 {"step": "review_creative_claims", "status": "blocked" if violations else "completed"},
                 {"step": "calculate_performance", "status": "completed"},
+                {"step": "select_objective_policy", "status": objective_policy.policy_id},
                 {
                     "step": "compare_periods",
                     "status": "warnings_present" if trend_review["warnings"] else "completed",
@@ -198,28 +205,28 @@ class CampaignCopilot:
         }
 
     @staticmethod
-    def _recommendation(cell: dict[str, Any], campaign: CampaignBrief) -> dict[str, Any]:
+    def _recommendation(cell: dict[str, Any], campaign: CampaignBrief, policy: Any) -> dict[str, Any]:
         minimum_review_spend = campaign.total_budget * 0.10
+        policy_score = score_cell(cell, policy)
         if cell["conversions"] == 0 and cell["spend"] >= minimum_review_spend:
             action = "pause_and_review"
             reason = "No conversions after the minimum review-spend threshold."
             change = 0.0
-        elif (
-            cell["cpa"] is not None
-            and cell["roas"] >= campaign.target_roas
-            and cell["cpa"] <= campaign.target_cpa
-        ):
+        elif policy_score["score"] >= policy_score["scale_score"]:
             action = "candidate_scale"
-            reason = "ROAS and CPA both meet the declared targets."
+            reason = f"All weighted factors in {policy.policy_id} meet the declared thresholds."
             change = min(15.0, campaign.max_reallocation_pct)
         else:
             action = "hold_and_test"
-            reason = "The cell does not yet meet both optimization targets."
+            reason = f"The cell does not meet every scale factor in {policy.policy_id}."
             change = 0.0
         return {
             "cell_id": cell["cell_id"],
             "action": action,
             "reason": reason,
+            "objective": campaign.objective,
+            "objective_policy_id": policy.policy_id,
+            "policy_score": policy_score,
             "recommended_budget_change_pct": change,
             "evidence_ids": [cell["source_id"]],
             "requires_human_approval": True,

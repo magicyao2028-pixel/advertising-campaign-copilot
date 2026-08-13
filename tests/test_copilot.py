@@ -92,6 +92,47 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertLessEqual(action["recommended_budget_change_pct"], 20)
         self.assertTrue(action["requires_human_approval"])
         self.assertFalse(action["executed"])
+        self.assertEqual(action["objective_policy_id"], "OBJ-REV-001")
+        self.assertEqual(action["policy_score"]["score"], 100)
+
+    def test_revenue_policy_uses_roas_and_cpa(self):
+        payload = sample_payload()
+        payload["target_roas"] = 99
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        action = next(item for item in result["optimization_recommendations"] if item["cell_id"] == "CELL-SEARCH-A")
+        self.assertEqual(result["objective_policy"]["policy_id"], "OBJ-REV-001")
+        self.assertEqual(action["policy_score"]["score"], 40)
+        self.assertEqual(action["action"], "hold_and_test")
+
+    def test_conversion_policy_does_not_treat_roas_as_scale_factor(self):
+        payload = sample_payload()
+        payload.update({"objective": "conversions", "outcome_type": "conversion", "target_roas": 99})
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        action = next(item for item in result["optimization_recommendations"] if item["cell_id"] == "CELL-SEARCH-A")
+        self.assertEqual(result["objective_policy"]["policy_id"], "OBJ-CONV-001")
+        self.assertEqual(action["policy_score"]["score"], 100)
+        self.assertEqual(action["action"], "candidate_scale")
+
+    def test_lead_policy_requires_qualified_lead_semantics(self):
+        payload = sample_payload()
+        payload.update({"objective": "leads", "outcome_type": "qualified_lead", "target_roas": 99})
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        action = next(item for item in result["optimization_recommendations"] if item["cell_id"] == "CELL-SEARCH-A")
+        self.assertEqual(result["objective_policy"]["policy_id"], "OBJ-LEAD-001")
+        self.assertEqual(action["action"], "candidate_scale")
+
+    def test_rejects_objective_outcome_semantic_mismatch(self):
+        payload = sample_payload()
+        payload["objective"] = "leads"
+        with self.assertRaisesRegex(ValueError, "requires outcome_type qualified_lead"):
+            CampaignBrief.from_mapping(payload)
+
+    def test_objective_policy_decision_is_deterministic(self):
+        campaign = load_campaign(SAMPLE)
+        first = CampaignCopilot().review(campaign)
+        second = CampaignCopilot().review(campaign)
+        self.assertEqual(first["objective_policy"], second["objective_policy"])
+        self.assertEqual(first["optimization_recommendations"], second["optimization_recommendations"])
 
     def test_zero_conversion_cell_requires_pause_review(self):
         result = CampaignCopilot().review(load_campaign(SAMPLE))
@@ -184,6 +225,8 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertIn("All inputs and performance values are synthetic", markdown)
         self.assertIn("Comparable period changes", markdown)
         self.assertIn("latest_period_missing", markdown)
+        self.assertIn("OBJ-REV-001", markdown)
+        self.assertIn("Policy score 100/100", markdown)
 
 
 if __name__ == "__main__":

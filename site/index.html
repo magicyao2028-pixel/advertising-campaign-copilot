@@ -8,7 +8,7 @@
 </head>
 <body>
   <main>
-    <p class="eyebrow">Offline portfolio prototype · v0.2</p>
+    <p class="eyebrow">Offline portfolio prototype · v0.3</p>
     <h1>Advertising Campaign Copilot</h1>
     <p class="lead">A reviewable path from campaign brief to bounded optimization advice—with evidence, guardrails, and a human approval gate.</p>
 
@@ -23,6 +23,22 @@
         <article><span>Reporting period</span><strong>2026-07</strong></article>
         <article><span>Approval boundary</span><strong>Human required</strong></article>
         <article><span>Platform writes</span><strong>0</strong></article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Selected objective policy</h2>
+      <div class="grid">
+        <article>
+          <span class="badge scale">OBJ-REV-001 · revenue</span>
+          <h3>Purchase outcome required</h3>
+          <p>ROAS target contributes 60 points and the CPA guardrail contributes 40. Search A scores 100/100; every factor remains visible for review.</p>
+        </article>
+        <article>
+          <span class="badge hold">Semantic gate</span>
+          <h3>Leads are not purchases</h3>
+          <p>A lead objective must declare <code>qualified_lead</code>. Objective and outcome mismatches stop before a recommendation is drafted.</p>
+        </article>
       </div>
     </section>
 
@@ -48,7 +64,7 @@
         <table>
           <thead><tr><th>Cell</th><th>CTR</th><th>CPA</th><th>ROAS</th><th>Draft action</th><th>Evidence</th></tr></thead>
           <tbody>
-            <tr><td>Search A</td><td>3.50%</td><td>90.00</td><td>3.33</td><td><span class="badge scale">Candidate scale +15%</span></td><td>PERF-2026-001</td></tr>
+            <tr><td>Search A</td><td>3.50%</td><td>90.00</td><td>3.33</td><td><span class="badge scale">Candidate scale +15% · score 100</span></td><td>PERF-2026-001</td></tr>
             <tr><td>Short video B</td><td>1.50%</td><td>200.00</td><td>1.29</td><td><span class="badge hold">Hold and test</span></td><td>PERF-2026-002</td></tr>
             <tr><td>Social C</td><td>1.11%</td><td>n/a</td><td>0.00</td><td><span class="badge pause">Pause and review</span></td><td>PERF-2026-003</td></tr>
           </tbody>
@@ -61,6 +77,7 @@
         <h2>Visible workflow</h2>
         <ol>
           <li>Validate brief and relationships</li>
+          <li>Select objective policy and verify outcome semantics</li>
           <li>Review creative claims</li>
           <li>Calculate descriptive metrics</li>
           <li>Draft bounded recommendations</li>
