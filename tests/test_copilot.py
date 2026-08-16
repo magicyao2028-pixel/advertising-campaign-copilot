@@ -190,6 +190,25 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertTrue(result["creative_review"]["release_blocked"])
         self.assertEqual(result["creative_review"]["violations"][0]["category"], "performance_guarantee")
 
+    def test_long_guarantee_grammar_cannot_bypass_category_override(self):
+        variants = (
+            "We guarantee you will see dramatically better results.",
+            "We guarantee every single customer will get results.",
+        )
+        for text in variants:
+            with self.subTest(text=text):
+                payload = sample_payload()
+                payload["creatives"][0]["claims"][0].update({
+                    "category": "descriptive",
+                    "text": text,
+                    "evidence_ids": [],
+                })
+                result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+                violation = result["creative_review"]["violations"][0]
+                self.assertTrue(result["creative_review"]["release_blocked"])
+                self.assertEqual(violation["matched_rule_id"], "CLAIM-PERFORMANCE-GUARANTEE")
+                self.assertEqual(result["optimization_recommendations"], [])
+
     def test_objective_claim_requires_declared_substantiation(self):
         payload = sample_payload()
         payload["creatives"][0]["claims"][0]["evidence_ids"] = []

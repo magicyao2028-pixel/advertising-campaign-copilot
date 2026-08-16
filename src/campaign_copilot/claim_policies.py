@@ -63,9 +63,7 @@ HIGH_RISK_RULES = (
         "CLAIM-PERFORMANCE-GUARANTEE",
         "performance_guarantee",
         re.compile(
-            r"(?:\bguarante(?:e|es|ed|eing)\b(?:\W+\w+){0,4}?\W+\b(?:results?|outcomes?|performance|success)\b"
-            r"|\b(?:results?|outcomes?|performance|success)\b(?:\W+\w+){0,4}?\W+\bguarante(?:e|es|ed|eing)\b"
-            r"|\bno\s+exceptions?\b)",
+            r"\bguarante(?:e|es|ed|eing)\b|\bno\s+exceptions?\b",
             re.IGNORECASE,
         ),
     ),
