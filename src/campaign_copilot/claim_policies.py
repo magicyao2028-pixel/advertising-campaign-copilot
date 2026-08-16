@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -57,12 +58,34 @@ CATEGORY_POLICY = {
     "health_outcome": ("block", ("FTC-HEALTH-CLAIMS",)),
 }
 
-PHRASE_CATEGORY = {
-    "guaranteed results": "performance_guarantee",
-    "no exceptions": "performance_guarantee",
-    "100% risk-free": "absolute_safety",
-    "instant cure": "health_outcome",
-}
+HIGH_RISK_RULES = (
+    (
+        "CLAIM-PERFORMANCE-GUARANTEE",
+        "performance_guarantee",
+        re.compile(
+            r"(?:\bguarante(?:e|es|ed|eing)\b(?:\W+\w+){0,4}?\W+\b(?:results?|outcomes?|performance|success)\b"
+            r"|\b(?:results?|outcomes?|performance|success)\b(?:\W+\w+){0,4}?\W+\bguarante(?:e|es|ed|eing)\b"
+            r"|\bno\s+exceptions?\b)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "CLAIM-ABSOLUTE-SAFETY",
+        "absolute_safety",
+        re.compile(
+            r"\b(?:100\s*%|completely|totally)\s+(?:risk[- ]free|safe)\b|\bno\s+risk\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "CLAIM-INSTANT-HEALTH-OUTCOME",
+        "health_outcome",
+        re.compile(
+            r"\b(?:instant|instantly|immediate|immediately)\w*\s+(?:cure|cures|cured|heal|heals|healed|relief)\b",
+            re.IGNORECASE,
+        ),
+    ),
+)
 
 
 def review_creative_claims(
@@ -74,15 +97,12 @@ def review_creative_claims(
     referenced_policy_ids: set[str] = set()
 
     for creative in creatives:
-        structured_phrases: set[str] = set()
+        structured_rule_ids: set[str] = set()
         for claim in creative.claims:
-            matched = [
-                (phrase, category)
-                for phrase, category in sorted(PHRASE_CATEGORY.items())
-                if phrase in claim.text.casefold()
-            ]
-            structured_phrases.update(phrase for phrase, _ in matched)
-            effective_category = matched[0][1] if matched else claim.category
+            matched = _match_high_risk_rule(claim.text)
+            if matched:
+                structured_rule_ids.add(matched["rule_id"])
+            effective_category = matched["category"] if matched else claim.category
             action, policy_ids = CATEGORY_POLICY[effective_category]
             referenced_policy_ids.update(policy_ids)
             substantiation = [
@@ -101,6 +121,8 @@ def review_creative_claims(
                 "declared_category": claim.category,
                 "category": effective_category,
                 "category_override_applied": effective_category != claim.category,
+                "matched_rule_id": matched["rule_id"] if matched else None,
+                "matched_text": matched["matched_text"] if matched else None,
                 "decision": "blocked" if blocked else "allowed_for_human_review",
                 "reason": reason,
                 "policy_ids": list(policy_ids),
@@ -108,17 +130,20 @@ def review_creative_claims(
             })
 
         text = f"{creative.headline} {creative.message}".casefold()
-        for phrase, category in sorted(PHRASE_CATEGORY.items()):
-            if phrase in text and phrase not in structured_phrases:
+        for rule_id, category, pattern in HIGH_RISK_RULES:
+            match = pattern.search(text)
+            if match and rule_id not in structured_rule_ids:
                 _, policy_ids = CATEGORY_POLICY[category]
                 referenced_policy_ids.update(policy_ids)
                 decisions.append({
                     "creative_id": creative.creative_id,
                     "claim_id": None,
-                    "claim": phrase,
+                    "claim": match.group(0),
                     "declared_category": None,
                     "category": category,
                     "category_override_applied": True,
+                    "matched_rule_id": rule_id,
+                    "matched_text": match.group(0),
                     "decision": "blocked",
                     "reason": "A high-risk phrase was found outside the structured claim register.",
                     "policy_ids": list(policy_ids),
@@ -136,6 +161,14 @@ def review_creative_claims(
         ],
         "policy_scope": "screening aid; current platform and jurisdiction review still required",
     }
+
+
+def _match_high_risk_rule(text: str) -> dict[str, str] | None:
+    for rule_id, category, pattern in HIGH_RISK_RULES:
+        match = pattern.search(text)
+        if match:
+            return {"rule_id": rule_id, "category": category, "matched_text": match.group(0)}
+    return None
 
 
 def _reason(action: str, substantiated: bool) -> str:

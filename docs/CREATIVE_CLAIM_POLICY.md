@@ -14,7 +14,7 @@ v0.4 converts the earlier phrase list into an inspectable claim register. Each s
 | `absolute_safety` | block | cannot be released by adding a local attachment |
 | `health_outcome` | block | outside this prototype's safe release scope |
 
-The free-text fallback still catches four known phrases when they appear outside the structured claim register. That fallback is deliberately narrow and is not a complete policy classifier.
+The free-text fallback uses three versioned concept-pattern rules for performance guarantees, absolute-safety language, and instant health outcomes. It catches grammatical variants in either structured claims or surrounding creative text and records the matched rule. It remains a bounded screening taxonomy, not a complete semantic or legal classifier.
 
 ## Public policy references
 

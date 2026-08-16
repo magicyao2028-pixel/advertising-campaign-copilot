@@ -168,7 +168,7 @@ class CampaignCopilotTests(unittest.TestCase):
         payload = sample_payload()
         payload["creatives"][0]["claims"][0].update({
             "category": "descriptive",
-            "text": "Guaranteed results for every campaign.",
+            "text": "We guarantee results for every campaign.",
             "evidence_ids": [],
         })
         result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
@@ -176,7 +176,19 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertEqual(violation["declared_category"], "descriptive")
         self.assertEqual(violation["category"], "performance_guarantee")
         self.assertTrue(violation["category_override_applied"])
+        self.assertEqual(violation["matched_rule_id"], "CLAIM-PERFORMANCE-GUARANTEE")
         self.assertEqual(result["optimization_recommendations"], [])
+
+    def test_reverse_order_guarantee_pattern_is_blocked(self):
+        payload = sample_payload()
+        payload["creatives"][0]["claims"][0].update({
+            "category": "descriptive",
+            "text": "Successful outcomes are fully guaranteed.",
+            "evidence_ids": [],
+        })
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        self.assertTrue(result["creative_review"]["release_blocked"])
+        self.assertEqual(result["creative_review"]["violations"][0]["category"], "performance_guarantee")
 
     def test_objective_claim_requires_declared_substantiation(self):
         payload = sample_payload()
