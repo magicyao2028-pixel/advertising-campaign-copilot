@@ -7,6 +7,7 @@
 - Blocked performance guarantees, absolute-safety claims, and health outcomes with inspectable policy IDs.
 - Added dated Google and FTC public policy references while preserving an explicit non-certification boundary.
 - Preserved objective semantics, bounded budget recommendations, human approval, and zero platform writes.
+- Hardened the structured register so known high-risk phrases override a misdeclared low-risk category.
 
 ## 0.3.0 - 2026-08-13
 

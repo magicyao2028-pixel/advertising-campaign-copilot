@@ -74,8 +74,16 @@ def review_creative_claims(
     referenced_policy_ids: set[str] = set()
 
     for creative in creatives:
+        structured_phrases: set[str] = set()
         for claim in creative.claims:
-            action, policy_ids = CATEGORY_POLICY[claim.category]
+            matched = [
+                (phrase, category)
+                for phrase, category in sorted(PHRASE_CATEGORY.items())
+                if phrase in claim.text.casefold()
+            ]
+            structured_phrases.update(phrase for phrase, _ in matched)
+            effective_category = matched[0][1] if matched else claim.category
+            action, policy_ids = CATEGORY_POLICY[effective_category]
             referenced_policy_ids.update(policy_ids)
             substantiation = [
                 evidence_by_id[evidence_id]
@@ -84,11 +92,15 @@ def review_creative_claims(
             ]
             blocked = action == "block" or (action == "require_substantiation" and not substantiation)
             reason = _reason(action, bool(substantiation))
+            if effective_category != claim.category:
+                reason = "A high-risk phrase overrides the declared category. " + reason
             decisions.append({
                 "creative_id": creative.creative_id,
                 "claim_id": claim.claim_id,
                 "claim": claim.text,
-                "category": claim.category,
+                "declared_category": claim.category,
+                "category": effective_category,
+                "category_override_applied": effective_category != claim.category,
                 "decision": "blocked" if blocked else "allowed_for_human_review",
                 "reason": reason,
                 "policy_ids": list(policy_ids),
@@ -96,16 +108,17 @@ def review_creative_claims(
             })
 
         text = f"{creative.headline} {creative.message}".casefold()
-        declared_text = " ".join(claim.text.casefold() for claim in creative.claims)
         for phrase, category in sorted(PHRASE_CATEGORY.items()):
-            if phrase in text and phrase not in declared_text:
+            if phrase in text and phrase not in structured_phrases:
                 _, policy_ids = CATEGORY_POLICY[category]
                 referenced_policy_ids.update(policy_ids)
                 decisions.append({
                     "creative_id": creative.creative_id,
                     "claim_id": None,
                     "claim": phrase,
+                    "declared_category": None,
                     "category": category,
+                    "category_override_applied": True,
                     "decision": "blocked",
                     "reason": "A high-risk phrase was found outside the structured claim register.",
                     "policy_ids": list(policy_ids),

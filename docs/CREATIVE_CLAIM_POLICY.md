@@ -27,6 +27,7 @@ References explain why the prototype asks for substantiation or blocks high-risk
 ## Safe failure behavior
 
 - Any blocked claim prevents all optimization recommendations from being released.
+- Known high-risk phrases override a falsely declared `descriptive` category and record the override.
 - An objective product claim with no declared substantiation is blocked.
 - Unknown evidence IDs fail input validation.
 - Human approval remains required after a claim passes the screening rules.

@@ -164,6 +164,20 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertIn("GOOGLE-UNRELIABLE-CLAIMS", violation["policy_ids"])
         self.assertTrue(result["creative_review"]["policy_references"])
 
+    def test_high_risk_phrase_overrides_misdeclared_descriptive_category(self):
+        payload = sample_payload()
+        payload["creatives"][0]["claims"][0].update({
+            "category": "descriptive",
+            "text": "Guaranteed results for every campaign.",
+            "evidence_ids": [],
+        })
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        violation = result["creative_review"]["violations"][0]
+        self.assertEqual(violation["declared_category"], "descriptive")
+        self.assertEqual(violation["category"], "performance_guarantee")
+        self.assertTrue(violation["category_override_applied"])
+        self.assertEqual(result["optimization_recommendations"], [])
+
     def test_objective_claim_requires_declared_substantiation(self):
         payload = sample_payload()
         payload["creatives"][0]["claims"][0]["evidence_ids"] = []
