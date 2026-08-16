@@ -2,23 +2,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from .models import CampaignBrief, Creative, PerformanceCell, period_index
+from .claim_policies import review_creative_claims
+from .models import CampaignBrief, PerformanceCell, period_index
 from .objective_policies import get_objective_policy, score_cell
-
-
-PROHIBITED_PHRASES = {
-    "guaranteed results",
-    "100% risk-free",
-    "instant cure",
-    "no exceptions",
-}
 
 
 class CampaignCopilot:
     """Builds a deterministic campaign review with bounded optimization advice."""
 
     def review(self, campaign: CampaignBrief) -> dict[str, Any]:
-        violations = self._creative_violations(campaign.creatives)
+        creative_review = review_creative_claims(campaign.creatives, campaign.claim_evidence)
+        violations = creative_review["violations"]
         envelopes = self._budget_envelopes(campaign)
         cells = [self._evaluate_cell(cell, campaign) for cell in campaign.performance]
         trend_review = self._trend_review(campaign)
@@ -42,10 +36,7 @@ class CampaignCopilot:
                 "budget_envelopes": envelopes,
                 "experiment_rule": "Change one primary variable per cell before interpreting uplift.",
             },
-            "creative_review": {
-                "release_blocked": bool(violations),
-                "violations": violations,
-            },
+            "creative_review": creative_review,
             "performance_review": cells,
             "trend_review": trend_review,
             "optimization_recommendations": recommendations,
@@ -89,16 +80,6 @@ class CampaignCopilot:
             }
             for index, cell in enumerate(campaign.performance)
         ]
-
-    @staticmethod
-    def _creative_violations(creatives: tuple[Creative, ...]) -> list[dict[str, str]]:
-        violations = []
-        for creative in creatives:
-            text = f"{creative.headline} {creative.message}".casefold()
-            for phrase in sorted(PROHIBITED_PHRASES):
-                if phrase in text:
-                    violations.append({"creative_id": creative.creative_id, "phrase": phrase})
-        return violations
 
     @staticmethod
     def _evaluate_cell(cell: PerformanceCell, campaign: CampaignBrief) -> dict[str, Any]:

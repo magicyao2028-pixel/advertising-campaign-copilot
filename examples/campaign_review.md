@@ -36,6 +36,17 @@
 - **CELL-SOCIAL-C - no_prior_period**: No earlier observation is available for comparison. [PERF-2026-003]
 - **CELL-VIDEO-B - non_adjacent_periods**: The latest available history is not the immediately preceding month. [PERF-2026-005] [PERF-2026-002]
 
+## Creative claim policy review
+
+- **CR-SEARCH-01 / CLAIM-001 - allowed_for_human_review**: objective_product_claim — Declared substantiation is present; a human must still verify scope and applicability. Policies: FTC-AD-SUBSTANTIATION; substantiation: SPEC-SYNTH-001.
+- **CR-VIDEO-02 / CLAIM-002 - allowed_for_human_review**: descriptive — Descriptive claim; human policy review remains required. Policies: prototype descriptive rule; substantiation: none.
+- **CR-SOCIAL-03 / CLAIM-003 - allowed_for_human_review**: descriptive — Descriptive claim; human policy review remains required. Policies: prototype descriptive rule; substantiation: none.
+- **CR-MARKET-04 / CLAIM-004 - allowed_for_human_review**: descriptive — Descriptive claim; human policy review remains required. Policies: prototype descriptive rule; substantiation: none.
+
+## Claim policy references
+
+- **FTC-AD-SUBSTANTIATION**: U.S. Federal Trade Commission, Advertising FAQ's: A Guide for Small Business (https://www.ftc.gov/business-guidance/resources/advertising-faqs-guide-small-business; checked 2026-08-16)
+
 ## Optimization recommendations
 
 - **CELL-SEARCH-A - candidate_scale**: All weighted factors in OBJ-REV-001 meet the declared thresholds. Policy score 100/100; suggested budget change 15.0%. [PERF-2026-001]

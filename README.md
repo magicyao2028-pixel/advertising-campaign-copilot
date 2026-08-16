@@ -1,8 +1,8 @@
 # Advertising Campaign Copilot
 
-An offline, reviewable prototype that turns a structured campaign brief and synthetic multi-period performance data into a campaign plan, metric audit, trend check, creative-claim gate, and bounded optimization recommendations.
+An offline, reviewable prototype that turns a structured campaign brief and synthetic multi-period performance data into a campaign plan, metric audit, trend check, evidence-linked creative-claim gate, and bounded optimization recommendations.
 
-**中文介绍：** 面向中小企业广告投放规划与复盘的 AI 应用原型。它将广告需求、创意、预算和模拟投放数据整理成可审核的计划与优化建议；所有调整均需人工批准，不连接真实广告账户，不产生真实投放或业绩。
+**中文介绍：** 面向中小企业广告投放规划与复盘的 AI 应用原型。它将广告需求、创意、预算和模拟投放数据整理成可审核的计划与优化建议；创意声明会按类别检查证据并显示政策依据，高风险或缺少依据的声明会阻断建议发布。所有调整均需人工批准，不连接真实广告账户，不产生真实投放或业绩。
 
 ## Why this project exists
 
@@ -10,13 +10,15 @@ Many small teams need a transparent workflow before they need a fully autonomous
 
 The business scenario is an internal AI-application exploration for Changsha Shiju Trading Co., Ltd. All names, campaign inputs, performance values, and outputs in the repository are synthetic.
 
-## What v0.3 demonstrates
+## What v0.4 demonstrates
 
 - structured campaign briefs and explicit KPI targets;
 - per-cell budget envelopes and one-variable experiment guidance;
 - CTR, CVR, CPA, and ROAS calculations with source identifiers;
 - adjacent-period comparisons plus explicit missing, non-adjacent, and incompatible-data warnings;
-- a basic creative-claim release gate;
+- a structured creative-claim taxonomy with declared substantiation records;
+- dated Google and FTC policy references plus an explicit non-certification boundary;
+- fail-safe blocking for unsupported objective claims and high-risk guarantee, safety, or health categories;
 - bounded recommendations: scale candidate, hold and test, or pause and review;
 - objective-specific policies with visible factors, weights, thresholds and scores;
 - explicit outcome semantics so lead policies cannot silently score purchase events;
@@ -41,7 +43,7 @@ The package has no runtime dependencies and requires Python 3.10 or later.
 Campaign brief
   -> schema and relationship validation
   -> objective/outcome policy selection
-  -> creative claim review
+  -> evidence-linked creative claim review
   -> synthetic metric calculation
   -> bounded recommendation draft
   -> human approval required
@@ -56,13 +58,14 @@ Campaign brief
 - `docs/PRD.md`: product intent and acceptance criteria
 - `docs/ARCHITECTURE.md`: components, data flow, and boundaries
 - `docs/OPTIMIZATION_LOGIC.md`: metric and decision rules
+- `docs/CREATIVE_CLAIM_POLICY.md`: claim taxonomy, substantiation, and public policy references
 - `docs/SECURITY.md`: safety, privacy, and credential policy
 - `docs/MAINTENANCE_PLAN.md`: ten planned maintenance rounds
 - `site/`: static demonstration published through GitHub Pages
 
 ## Honest boundaries
 
-This is a portfolio prototype, not a production ad-buying system. It does not call an LLM, estimate causal uplift, forecast performance, guarantee results, connect to an ad platform, modify budgets, publish creatives, or store customer data. Its period changes and objective scores are deterministic review aids, not proof of causal performance. See [the objective policies](docs/OBJECTIVE_POLICIES.md), [architecture](docs/ARCHITECTURE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md).
+This is a portfolio prototype, not a production ad-buying system or compliance certification. It does not call an LLM, estimate causal uplift, forecast performance, guarantee results, connect to an ad platform, modify budgets, publish creatives, or store customer data. Policy links were checked on the recorded date and must be refreshed for a real release. Its claim decisions, period changes, and objective scores are deterministic review aids, not legal advice or proof of causal performance. See [the creative claim policy](docs/CREATIVE_CLAIM_POLICY.md), [objective policies](docs/OBJECTIVE_POLICIES.md), [architecture](docs/ARCHITECTURE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md).
 
 ## License
 

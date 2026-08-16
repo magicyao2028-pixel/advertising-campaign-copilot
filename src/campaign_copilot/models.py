@@ -10,7 +10,59 @@ from typing import Any
 OBJECTIVES = {"conversions", "revenue", "leads"}
 OUTCOME_TYPES = {"purchase", "conversion", "qualified_lead"}
 CHANNELS = {"search", "short_video", "social_feed", "marketplace"}
+CLAIM_CATEGORIES = {
+    "descriptive",
+    "objective_product_claim",
+    "performance_guarantee",
+    "absolute_safety",
+    "health_outcome",
+}
+CLAIM_EVIDENCE_TYPES = {"product_substantiation"}
 PERIOD_PATTERN = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
+
+
+@dataclass(frozen=True)
+class ClaimEvidence:
+    evidence_id: str
+    title: str
+    evidence_type: str
+    reference: str
+
+    @classmethod
+    def from_mapping(cls, value: dict[str, Any]) -> "ClaimEvidence":
+        item = cls(
+            evidence_id=str(value.get("evidence_id", "")).strip(),
+            title=str(value.get("title", "")).strip(),
+            evidence_type=str(value.get("evidence_type", "")).strip(),
+            reference=str(value.get("reference", "")).strip(),
+        )
+        if not all((item.evidence_id, item.title, item.evidence_type, item.reference)):
+            raise ValueError("claim evidence fields must not be blank")
+        if item.evidence_type not in CLAIM_EVIDENCE_TYPES:
+            raise ValueError(f"evidence_type must be one of: {', '.join(sorted(CLAIM_EVIDENCE_TYPES))}")
+        return item
+
+
+@dataclass(frozen=True)
+class CreativeClaim:
+    claim_id: str
+    text: str
+    category: str
+    evidence_ids: tuple[str, ...]
+
+    @classmethod
+    def from_mapping(cls, value: dict[str, Any]) -> "CreativeClaim":
+        item = cls(
+            claim_id=str(value.get("claim_id", "")).strip(),
+            text=str(value.get("text", "")).strip(),
+            category=str(value.get("category", "")).strip(),
+            evidence_ids=_strings(value.get("evidence_ids", []), "evidence_ids", allow_empty=True),
+        )
+        if not item.claim_id or not item.text:
+            raise ValueError("claim_id and claim text must not be blank")
+        if item.category not in CLAIM_CATEGORIES:
+            raise ValueError(f"claim category must be one of: {', '.join(sorted(CLAIM_CATEGORIES))}")
+        return item
 
 
 @dataclass(frozen=True)
@@ -18,13 +70,18 @@ class Creative:
     creative_id: str
     headline: str
     message: str
+    claims: tuple[CreativeClaim, ...]
 
     @classmethod
     def from_mapping(cls, value: dict[str, Any]) -> "Creative":
+        claims_payload = value.get("claims", [])
+        if not isinstance(claims_payload, list):
+            raise ValueError("creative claims must be a list")
         item = cls(
             creative_id=str(value.get("creative_id", "")).strip(),
             headline=str(value.get("headline", "")).strip(),
             message=str(value.get("message", "")).strip(),
+            claims=tuple(CreativeClaim.from_mapping(entry) for entry in claims_payload),
         )
         if not all((item.creative_id, item.headline, item.message)):
             raise ValueError("creative_id, headline and message must not be blank")
@@ -89,18 +146,22 @@ class CampaignBrief:
     creatives: tuple[Creative, ...]
     performance: tuple[PerformanceCell, ...]
     performance_history: tuple[PerformanceCell, ...]
+    claim_evidence: tuple[ClaimEvidence, ...]
 
     @classmethod
     def from_mapping(cls, value: dict[str, Any]) -> "CampaignBrief":
         creatives_payload = value.get("creatives")
         performance_payload = value.get("performance")
         history_payload = value.get("performance_history", [])
+        claim_evidence_payload = value.get("claim_evidence", [])
         if not isinstance(creatives_payload, list) or not creatives_payload:
             raise ValueError("creatives must be a non-empty list")
         if not isinstance(performance_payload, list) or not performance_payload:
             raise ValueError("performance must be a non-empty list")
         if not isinstance(history_payload, list):
             raise ValueError("performance_history must be a list")
+        if not isinstance(claim_evidence_payload, list):
+            raise ValueError("claim_evidence must be a list")
         channels = _strings(value.get("channels"), "channels")
         if not set(channels).issubset(CHANNELS):
             raise ValueError(f"channels must be selected from: {', '.join(sorted(CHANNELS))}")
@@ -122,6 +183,7 @@ class CampaignBrief:
             creatives=tuple(Creative.from_mapping(entry) for entry in creatives_payload),
             performance=tuple(PerformanceCell.from_mapping(entry) for entry in performance_payload),
             performance_history=tuple(PerformanceCell.from_mapping(entry) for entry in history_payload),
+            claim_evidence=tuple(ClaimEvidence.from_mapping(entry) for entry in claim_evidence_payload),
         )
         if not all((item.campaign_id, item.product, item.audience, item.currency, item.human_owner)):
             raise ValueError("campaign identity and owner fields must not be blank")
@@ -175,12 +237,21 @@ def _strings(value: Any, field: str, allow_empty: bool = False) -> tuple[str, ..
 
 def _validate_relationships(item: CampaignBrief) -> None:
     creative_ids = [creative.creative_id for creative in item.creatives]
+    claims = [claim for creative in item.creatives for claim in creative.claims]
+    claim_ids = [claim.claim_id for claim in claims]
+    claim_evidence_ids = [evidence.evidence_id for evidence in item.claim_evidence]
     current_cell_ids = [cell.cell_id for cell in item.performance]
     observations = item.performance + item.performance_history
     source_ids = [cell.source_id for cell in observations]
     observation_keys = [(cell.cell_id, cell.period) for cell in observations]
     if len(creative_ids) != len(set(creative_ids)):
         raise ValueError("creative_id values must be unique")
+    if len(claim_ids) != len(set(claim_ids)):
+        raise ValueError("claim_id values must be unique")
+    if len(claim_evidence_ids) != len(set(claim_evidence_ids)):
+        raise ValueError("claim evidence_id values must be unique")
+    if any(not set(claim.evidence_ids).issubset(claim_evidence_ids) for claim in claims):
+        raise ValueError("every claim evidence_id must reference declared claim_evidence")
     if len(current_cell_ids) != len(set(current_cell_ids)):
         raise ValueError("current performance cell_id values must be unique")
     if any(cell.period != item.reporting_period for cell in item.performance):

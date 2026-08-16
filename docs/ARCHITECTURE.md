@@ -8,7 +8,7 @@ The prototype is a local decision-support workflow. A human supplies a synthetic
 JSON brief
   -> CampaignBrief validation
   -> objective policy selection and scoring
-  -> creative claim gate
+  -> structured claim taxonomy + substantiation + policy-reference gate
   -> metric engine
   -> adjacent-period comparability check
   -> recommendation rules
@@ -22,13 +22,14 @@ JSON brief
 | --- | --- |
 | `models.py` | Parse types and validate identities, relationships, budget, and funnel counts |
 | `objective_policies.py` | Bind objectives to outcome semantics, weighted factors, and scale thresholds |
+| `claim_policies.py` | Apply category decisions, require substantiation, and expose dated public policy references |
 | `copilot.py` | Review claims, calculate metrics and period changes, draft bounded recommendations, emit trace |
 | `report.py` | Render a decision-readable Markdown report with evidence IDs |
 | `cli.py` | Provide a reproducible local entry point and write output artifacts |
 
 ## Agent boundary
 
-The word *copilot* describes a reviewable application workflow. v0.3 uses deterministic rules rather than an autonomous or LLM-based agent. The trace makes the workflow stages visible, while the governance object makes the execution boundary machine-readable.
+The word *copilot* describes a reviewable application workflow. v0.4 uses deterministic rules rather than an autonomous or LLM-based agent. The trace makes the workflow stages visible, while the governance object makes the execution boundary machine-readable.
 
 ## Data boundary
 
@@ -36,7 +37,8 @@ The word *copilot* describes a reviewable application workflow. v0.3 uses determ
 - no network request is performed by the application;
 - no credentials are required;
 - outputs contain recommendations, not commands;
-- `platform_write_executed` is always `false` in v0.3.
+- `platform_write_executed` is always `false` in v0.4;
+- policy URLs are provenance for reviewer inspection, not a claim that the offline application continuously monitors platform rules;
 - only adjacent monthly observations with unchanged channel and creative are compared;
 - missing or incompatible observations remain visible as warnings instead of being silently interpolated.
 

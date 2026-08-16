@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 - 2026-08-16
+
+- Added a structured five-category creative-claim register and deterministic review decisions.
+- Required declared substantiation for objective product claims and validated evidence links.
+- Blocked performance guarantees, absolute-safety claims, and health outcomes with inspectable policy IDs.
+- Added dated Google and FTC public policy references while preserving an explicit non-certification boundary.
+- Preserved objective semantics, bounded budget recommendations, human approval, and zero platform writes.
+
 ## 0.3.0 - 2026-08-13
 
 - Added versioned policies for revenue, conversion, and qualified-lead objectives.

@@ -46,7 +46,63 @@
   },
   "creative_review": {
     "release_blocked": false,
-    "violations": []
+    "decisions": [
+      {
+        "creative_id": "CR-SEARCH-01",
+        "claim_id": "CLAIM-001",
+        "claim": "The synthetic gift set contains three labeled tea tins.",
+        "category": "objective_product_claim",
+        "decision": "allowed_for_human_review",
+        "reason": "Declared substantiation is present; a human must still verify scope and applicability.",
+        "policy_ids": [
+          "FTC-AD-SUBSTANTIATION"
+        ],
+        "substantiation_ids": [
+          "SPEC-SYNTH-001"
+        ]
+      },
+      {
+        "creative_id": "CR-VIDEO-02",
+        "claim_id": "CLAIM-002",
+        "claim": "The concept focuses on packaging and serving moments.",
+        "category": "descriptive",
+        "decision": "allowed_for_human_review",
+        "reason": "Descriptive claim; human policy review remains required.",
+        "policy_ids": [],
+        "substantiation_ids": []
+      },
+      {
+        "creative_id": "CR-SOCIAL-03",
+        "claim_id": "CLAIM-003",
+        "claim": "The concept compares synthetic gift occasions and package sizes.",
+        "category": "descriptive",
+        "decision": "allowed_for_human_review",
+        "reason": "Descriptive claim; human policy review remains required.",
+        "policy_ids": [],
+        "substantiation_ids": []
+      },
+      {
+        "creative_id": "CR-MARKET-04",
+        "claim_id": "CLAIM-004",
+        "claim": "The concept shows gift occasions and package details.",
+        "category": "descriptive",
+        "decision": "allowed_for_human_review",
+        "reason": "Descriptive claim; human policy review remains required.",
+        "policy_ids": [],
+        "substantiation_ids": []
+      }
+    ],
+    "violations": [],
+    "policy_references": [
+      {
+        "policy_id": "FTC-AD-SUBSTANTIATION",
+        "title": "Advertising FAQ's: A Guide for Small Business",
+        "publisher": "U.S. Federal Trade Commission",
+        "url": "https://www.ftc.gov/business-guidance/resources/advertising-faqs-guide-small-business",
+        "checked_on": "2026-08-16"
+      }
+    ],
+    "policy_scope": "screening aid; current platform and jurisdiction review still required"
   },
   "performance_review": [
     {

@@ -54,10 +54,22 @@ def render_markdown(result: dict[str, Any]) -> str:
         for item in result["trend_review"]["warnings"]:
             citations = " ".join(f"[{source}]" for source in item["evidence_ids"])
             lines.append(f"- **{item['cell_id']} - {item['code']}**: {item['message']} {citations}")
-    if result["creative_review"]["violations"]:
-        lines.extend(["", "## Blocking creative claims", ""])
-        for item in result["creative_review"]["violations"]:
-            lines.append(f"- {item['creative_id']}: `{item['phrase']}`")
+    if result["creative_review"]["decisions"]:
+        lines.extend(["", "## Creative claim policy review", ""])
+        for item in result["creative_review"]["decisions"]:
+            policies = ", ".join(item["policy_ids"]) or "prototype descriptive rule"
+            evidence = ", ".join(item["substantiation_ids"]) or "none"
+            lines.append(
+                f"- **{item['creative_id']} / {item['claim_id'] or 'undeclared'} - {item['decision']}**: "
+                f"{item['category']} — {item['reason']} Policies: {policies}; substantiation: {evidence}."
+            )
+    if result["creative_review"]["policy_references"]:
+        lines.extend(["", "## Claim policy references", ""])
+        for item in result["creative_review"]["policy_references"]:
+            lines.append(
+                f"- **{item['policy_id']}**: {item['publisher']}, {item['title']} "
+                f"({item['url']}; checked {item['checked_on']})"
+            )
     if result["optimization_recommendations"]:
         lines.extend(["", "## Optimization recommendations", ""])
         for item in result["optimization_recommendations"]:

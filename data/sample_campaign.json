@@ -17,26 +17,66 @@
     "No guaranteed performance claims",
     "All budget changes require human approval"
   ],
+  "claim_evidence": [
+    {
+      "evidence_id": "SPEC-SYNTH-001",
+      "title": "Synthetic product configuration sheet",
+      "evidence_type": "product_substantiation",
+      "reference": "Public-safe demonstration fixture; not a real product specification"
+    }
+  ],
   "creatives": [
     {
       "creative_id": "CR-SEARCH-01",
       "headline": "Seasonal tea gift set",
-      "message": "Explore a synthetic gift-set campaign concept for the holiday period."
+      "message": "Explore a synthetic gift-set campaign concept for the holiday period.",
+      "claims": [
+        {
+          "claim_id": "CLAIM-001",
+          "text": "The synthetic gift set contains three labeled tea tins.",
+          "category": "objective_product_claim",
+          "evidence_ids": ["SPEC-SYNTH-001"]
+        }
+      ]
     },
     {
       "creative_id": "CR-VIDEO-02",
       "headline": "A calm tea ritual",
-      "message": "A short-video concept focused on packaging, origin story and serving moments."
+      "message": "A short-video concept focused on packaging, origin story and serving moments.",
+      "claims": [
+        {
+          "claim_id": "CLAIM-002",
+          "text": "The concept focuses on packaging and serving moments.",
+          "category": "descriptive",
+          "evidence_ids": []
+        }
+      ]
     },
     {
       "creative_id": "CR-SOCIAL-03",
       "headline": "Gift planning guide",
-      "message": "A social-feed concept comparing synthetic gift occasions and package sizes."
+      "message": "A social-feed concept comparing synthetic gift occasions and package sizes.",
+      "claims": [
+        {
+          "claim_id": "CLAIM-003",
+          "text": "The concept compares synthetic gift occasions and package sizes.",
+          "category": "descriptive",
+          "evidence_ids": []
+        }
+      ]
     },
     {
       "creative_id": "CR-MARKET-04",
       "headline": "Tea gift selection page",
-      "message": "A synthetic marketplace concept showing gift occasions and package details."
+      "message": "A synthetic marketplace concept showing gift occasions and package details.",
+      "claims": [
+        {
+          "claim_id": "CLAIM-004",
+          "text": "The concept shows gift occasions and package details.",
+          "category": "descriptive",
+          "evidence_ids": []
+        }
+      ]
     }
   ],
   "performance": [

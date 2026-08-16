@@ -151,6 +151,50 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertTrue(result["creative_review"]["release_blocked"])
         self.assertEqual(result["optimization_recommendations"], [])
 
+    def test_structured_performance_guarantee_has_policy_evidence(self):
+        payload = sample_payload()
+        payload["creatives"][0]["claims"][0].update({
+            "category": "performance_guarantee",
+            "text": "Guaranteed results for every campaign.",
+            "evidence_ids": [],
+        })
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        violation = result["creative_review"]["violations"][0]
+        self.assertEqual(violation["category"], "performance_guarantee")
+        self.assertIn("GOOGLE-UNRELIABLE-CLAIMS", violation["policy_ids"])
+        self.assertTrue(result["creative_review"]["policy_references"])
+
+    def test_objective_claim_requires_declared_substantiation(self):
+        payload = sample_payload()
+        payload["creatives"][0]["claims"][0]["evidence_ids"] = []
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        violation = result["creative_review"]["violations"][0]
+        self.assertEqual(violation["category"], "objective_product_claim")
+        self.assertIn("require a declared substantiation", violation["reason"])
+
+    def test_substantiated_objective_claim_reaches_human_review(self):
+        result = CampaignCopilot().review(load_campaign(SAMPLE))
+        decision = next(
+            item for item in result["creative_review"]["decisions"]
+            if item["claim_id"] == "CLAIM-001"
+        )
+        self.assertEqual(decision["decision"], "allowed_for_human_review")
+        self.assertEqual(decision["substantiation_ids"], ["SPEC-SYNTH-001"])
+
+    def test_rejects_unknown_claim_evidence_reference(self):
+        payload = sample_payload()
+        payload["creatives"][0]["claims"][0]["evidence_ids"] = ["UNKNOWN"]
+        with self.assertRaisesRegex(ValueError, "declared claim_evidence"):
+            CampaignBrief.from_mapping(payload)
+
+    def test_health_claim_is_blocked_even_with_product_substantiation(self):
+        payload = sample_payload()
+        payload["creatives"][0]["claims"][0]["category"] = "health_outcome"
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        violation = result["creative_review"]["violations"][0]
+        self.assertEqual(violation["decision"], "blocked")
+        self.assertEqual(violation["policy_ids"], ["FTC-HEALTH-CLAIMS"])
+
     def test_zero_traffic_cell_is_safe(self):
         payload = sample_payload()
         payload["performance"][0].update({
@@ -227,6 +271,8 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertIn("latest_period_missing", markdown)
         self.assertIn("OBJ-REV-001", markdown)
         self.assertIn("Policy score 100/100", markdown)
+        self.assertIn("FTC-AD-SUBSTANTIATION", markdown)
+        self.assertIn("SPEC-SYNTH-001", markdown)
 
 
 if __name__ == "__main__":
