@@ -1,0 +1,68 @@
+{
+  "replay_version": "0.5",
+  "batch_id": "SYNTH-CREATIVE-REVIEW-001",
+  "source_data": "synthetic",
+  "summary": {
+    "total_feedback": 3,
+    "replayed": 2,
+    "passed": 2,
+    "failed": 0,
+    "excluded": 1
+  },
+  "replayed": [
+    {
+      "feedback_id": "FB-GUARANTEE-001",
+      "source_type": "synthetic",
+      "classification": "safety",
+      "reviewer_alias": "synthetic-policy-reviewer",
+      "checks": {
+        "status": true,
+        "release_blocked": true,
+        "matched_rule_id": true,
+        "no_platform_write": true,
+        "blocked_release_has_no_optimization": true
+      },
+      "actual": {
+        "status": "blocked_claim_review",
+        "release_blocked": true,
+        "matched_rule_id": "CLAIM-PERFORMANCE-GUARANTEE",
+        "platform_write_executed": false,
+        "optimization_recommendations": 0
+      },
+      "passed": true
+    },
+    {
+      "feedback_id": "FB-SUBSTANTIATION-002",
+      "source_type": "synthetic",
+      "classification": "requirement",
+      "reviewer_alias": "synthetic-product-reviewer",
+      "checks": {
+        "status": true,
+        "release_blocked": true,
+        "matched_rule_id": true,
+        "no_platform_write": true,
+        "blocked_release_has_no_optimization": true
+      },
+      "actual": {
+        "status": "blocked_claim_review",
+        "release_blocked": true,
+        "matched_rule_id": null,
+        "platform_write_executed": false,
+        "optimization_recommendations": 0
+      },
+      "passed": true
+    }
+  ],
+  "excluded": [
+    {
+      "feedback_id": "FB-AUTOPUBLISH-003",
+      "disposition": "pending",
+      "reason": "Only accepted_for_replay feedback can enter deterministic review."
+    }
+  ],
+  "governance": [
+    "Feedback is separate review evidence and never changes the bundled campaign automatically.",
+    "Only accepted_for_replay records execute; all platform writes and blocked optimization outputs remain disabled.",
+    "The public fixture is synthetic and does not represent advertiser or platform feedback."
+  ]
+}

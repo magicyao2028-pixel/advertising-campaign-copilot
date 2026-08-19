@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 - 2026-08-20
+
+- Added governed replay for accepted creative-feedback records while excluding pending and rejected records.
+- Added regression cases proving that guarantees and missing substantiation still block optimization output.
+- Added a reviewer trial, seven-claim evidence index, external intake record, and synthetic feedback provenance.
+- Preserved human approval and zero platform writes throughout the feedback loop.
+
 ## 0.4.0 - 2026-08-16
 
 - Added a structured five-category creative-claim register and deterministic review decisions.

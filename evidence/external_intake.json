@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0", "reviewed_on": "2026-08-20", "candidates": [
+    {"repository": "https://github.com/pydantic/pydantic", "version": "v2.13.4", "commit": "cf67d4b3193c3fe43ede18612ed62785eee11382", "license": "MIT", "decision": "rejected", "code_adopted": false, "reason": "The repository already validates one small deterministic JSON contract with standard-library dataclasses; adding a runtime framework would not improve the claim-release boundary."},
+    {"repository": "https://github.com/python-jsonschema/jsonschema", "version": "v4.26.0", "commit": "a7277432b0f7bcd0551f6e589d30457017125df4", "license": "MIT", "decision": "rejected", "code_adopted": false, "reason": "Schema validation alone would not exercise policy decisions, human authority or no-platform-write behavior and would add a dependency to a zero-dependency trial."}
+  ]
+}

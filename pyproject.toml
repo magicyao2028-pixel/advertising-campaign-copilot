@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "advertising-campaign-copilot"
-version = "0.4.0"
+version = "0.5.0"
 description = "Offline, objective-aware campaign planning and optimization workflow."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,6 +14,8 @@ dependencies = []
 
 [project.scripts]
 campaign-copilot = "campaign_copilot.cli:main"
+campaign-feedback-replay = "campaign_copilot.creative_feedback_cli:main"
+campaign-trial = "campaign_copilot.trial_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

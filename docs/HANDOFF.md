@@ -2,9 +2,9 @@
 
 ## Current state
 
-- Release: v0.4.0
-- Maintenance rounds completed: 3/10
-- M3: structured claim taxonomy, declared substantiation, public policy references, and fail-safe release blocking
+- Release: v0.5.0
+- Maintenance rounds completed: 4/10
+- M4: governed creative-feedback replay, regression evidence, reviewer trial, and seven-claim evidence index
 - Runtime: offline Python 3.10+, no runtime dependencies
 - Data: synthetic only
 - External writes: none
@@ -17,9 +17,19 @@ python -m unittest discover -s tests -v
 python -m campaign_copilot.cli data/sample_campaign.json \
   --json-output examples/campaign_review.json \
   --markdown-output examples/campaign_review.md
+python -m campaign_copilot.creative_feedback_cli
+python -m campaign_copilot.trial_cli
 ```
 
-## M3 evidence
+## M4 evidence
+
+- two accepted synthetic feedback records replay deterministically and remain blocked as expected;
+- a pending auto-publish suggestion is visible but excluded from execution;
+- replay uses an isolated campaign copy and never alters the source fixture;
+- the trial validates external screening, feedback provenance, seven claims, and zero platform writes;
+- synthetic labels are explicit and no adoption or commercial result is claimed.
+
+## Preserved M3 evidence
 
 - revenue uses ROAS plus a CPA guardrail under `OBJ-REV-001`;
 - conversions use CPA plus a recorded-conversion gate under `OBJ-CONV-001`;
@@ -33,9 +43,9 @@ python -m campaign_copilot.cli data/sample_campaign.json \
 
 ## Next authorized maintenance round
 
-M4: add minimum-sample and experiment-quality checks. Preserve claim policy references, objective policies, period comparability, approval, and execution boundaries.
+M5: add minimum-sample and experiment-quality checks. Preserve claim policy references, feedback provenance, objective policies, period comparability, approval, and execution boundaries.
 
-## Completion gate for M4
+## Completion gate for M5
 
 - minimum-sample assumptions are explicit and tested;
 - low-information cells cannot qualify for scaling;

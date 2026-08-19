@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0", "feedback_id": "FB-CREATIVE-SYN-001", "source_type": "synthetic", "recorded_on": "2026-08-20", "classification": "safety", "decision": "accepted",
+  "summary": "Creative-policy feedback must replay against a copy and blocked claims must emit neither optimization output nor platform writes.",
+  "acceptance_test": "tests/test_creative_feedback.py", "implementation": "src/campaign_copilot/creative_feedback.py",
+  "release_result": "Guarantee and missing-substantiation cases block release; a pending auto-publish request remains excluded.",
+  "adoption_claim": "Synthetic requirement only; not real advertiser, agency or platform feedback."
+}

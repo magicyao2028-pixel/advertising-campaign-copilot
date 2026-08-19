@@ -8,6 +8,9 @@
 - No platform write, creative publication, or budget mutation is implemented.
 - Objective/outcome mismatches are rejected before a recommendation is drafted.
 - Policy scores are review evidence only and never authorize an external action.
+- Feedback fixtures are synthetic and cannot be presented as advertiser, platform, or maintainer adoption.
+- Only explicitly accepted feedback is replayed; replay runs against an isolated copy and never mutates the bundled campaign.
+- Trial and feedback commands write local reports only and preserve zero platform writes.
 
 ## Safe-use rules
 

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0", "project": "advertising-campaign-copilot", "claims": [
+    {"claim_id": "CAMPAIGN-BUSINESS-001", "statement": "The workflow supports reviewable campaign planning and bounded optimization decisions.", "artifacts": [{"kind": "requirements", "path": "docs/PRD.md"}, {"kind": "logic", "path": "docs/OPTIMIZATION_LOGIC.md"}]},
+    {"claim_id": "CAMPAIGN-RUN-001", "statement": "A clean trial reviews a synthetic campaign without a paid API or platform write.", "artifacts": [{"kind": "implementation", "path": "src/campaign_copilot/trial.py"}, {"kind": "guide", "path": "docs/TRIAL_GUIDE.md"}]},
+    {"claim_id": "CAMPAIGN-CLAIM-001", "statement": "Creative claims are screened against category, phrase and substantiation controls.", "artifacts": [{"kind": "implementation", "path": "src/campaign_copilot/claim_policies.py"}, {"kind": "tests", "path": "tests/test_copilot.py"}]},
+    {"claim_id": "CAMPAIGN-FAIL-001", "statement": "Blocked feedback cases emit no optimization recommendation or platform write.", "artifacts": [{"kind": "tests", "path": "tests/test_creative_feedback.py"}]},
+    {"claim_id": "CAMPAIGN-OSS-001", "statement": "Two validation projects were screened without forcing unnecessary dependencies.", "artifacts": [{"kind": "screening", "path": "evidence/external_intake.json"}]},
+    {"claim_id": "CAMPAIGN-FEEDBACK-001", "statement": "Synthetic creative feedback links classification, decision, replay and regression evidence.", "artifacts": [{"kind": "feedback", "path": "evidence/feedback_case.json"}, {"kind": "fixture", "path": "data/creative_feedback.json"}]},
+    {"claim_id": "CAMPAIGN-LIMIT-001", "statement": "Policy currency, synthetic-data and human-authority limitations remain explicit.", "artifacts": [{"kind": "security", "path": "docs/SECURITY.md"}, {"kind": "handoff", "path": "docs/HANDOFF.md"}]}
+  ],
+  "boundaries": [
+    "Policy rules are a screening aid and require current platform, product and jurisdiction review.",
+    "All campaign data and feedback are synthetic; no live spend, advertiser adoption or performance outcome is claimed.",
+    "A real pilot requires verified substantiation, authenticated owners, approved budgets, live-data quality controls and explicit approval before any platform write."
+  ]
+}

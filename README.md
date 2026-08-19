@@ -10,7 +10,7 @@ Many small teams need a transparent workflow before they need a fully autonomous
 
 The business scenario is an internal AI-application exploration for Changsha Shiju Trading Co., Ltd. All names, campaign inputs, performance values, and outputs in the repository are synthetic.
 
-## What v0.4 demonstrates
+## What v0.5 demonstrates
 
 - structured campaign briefs and explicit KPI targets;
 - per-cell budget envelopes and one-variable experiment guidance;
@@ -23,6 +23,8 @@ The business scenario is an internal AI-application exploration for Changsha Shi
 - objective-specific policies with visible factors, weights, thresholds and scores;
 - explicit outcome semantics so lead policies cannot silently score purchase events;
 - mandatory human approval and zero platform writes;
+- governed replay of accepted creative feedback against an isolated campaign copy;
+- exclusion of pending feedback plus a seven-claim evidence index and clean offline trial;
 - deterministic tests and a static public demo.
 
 ## Quick start
@@ -33,6 +35,8 @@ python -m unittest discover -s tests -v
 python -m campaign_copilot.cli data/sample_campaign.json \
   --json-output examples/campaign_review.json \
   --markdown-output examples/campaign_review.md
+campaign-feedback-replay
+campaign-trial
 ```
 
 The package has no runtime dependencies and requires Python 3.10 or later.
@@ -60,12 +64,13 @@ Campaign brief
 - `docs/OPTIMIZATION_LOGIC.md`: metric and decision rules
 - `docs/CREATIVE_CLAIM_POLICY.md`: claim taxonomy, substantiation, and public policy references
 - `docs/SECURITY.md`: safety, privacy, and credential policy
+- `docs/TRIAL_GUIDE.md`: a 15–20 minute reviewer trial and recovery path
 - `docs/MAINTENANCE_PLAN.md`: ten planned maintenance rounds
 - `site/`: static demonstration published through GitHub Pages
 
 ## Honest boundaries
 
-This is a portfolio prototype, not a production ad-buying system or compliance certification. It does not call an LLM, estimate causal uplift, forecast performance, guarantee results, connect to an ad platform, modify budgets, publish creatives, or store customer data. Policy links were checked on the recorded date and must be refreshed for a real release. Its claim decisions, period changes, and objective scores are deterministic review aids, not legal advice or proof of causal performance. See [the creative claim policy](docs/CREATIVE_CLAIM_POLICY.md), [objective policies](docs/OBJECTIVE_POLICIES.md), [architecture](docs/ARCHITECTURE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md).
+This is a portfolio prototype, not a production ad-buying system or compliance certification. It does not call an LLM, estimate causal uplift, forecast performance, guarantee results, connect to an ad platform, modify budgets, publish creatives, or store customer data. Policy links were checked on the recorded date and must be refreshed for a real release. Feedback records are synthetic regression evidence, not advertiser, platform, or maintainer feedback. Its claim decisions, period changes, and objective scores are deterministic review aids, not legal advice or proof of causal performance. See [the creative claim policy](docs/CREATIVE_CLAIM_POLICY.md), [objective policies](docs/OBJECTIVE_POLICIES.md), [architecture](docs/ARCHITECTURE.md), [trial guide](docs/TRIAL_GUIDE.md) and [maintenance plan](docs/MAINTENANCE_PLAN.md).
 
 ## License
 

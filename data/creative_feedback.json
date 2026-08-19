@@ -1,0 +1,21 @@
+{
+  "batch_id": "SYNTH-CREATIVE-REVIEW-001",
+  "records": [
+    {
+      "feedback_id": "FB-GUARANTEE-001", "source_type": "synthetic", "recorded_on": "2026-08-20", "classification": "safety", "disposition": "accepted_for_replay", "reviewer_alias": "synthetic-policy-reviewer",
+      "rationale": "A guarantee hidden under a descriptive category must still block release.",
+      "replay": {"creative_id": "CR-VIDEO-02", "claim_id": "CLAIM-002", "text": "We guarantee every single customer will get results.", "category": "descriptive", "evidence_ids": []},
+      "expected": {"status": "blocked_claim_review", "release_blocked": true, "matched_rule_id": "CLAIM-PERFORMANCE-GUARANTEE"}
+    },
+    {
+      "feedback_id": "FB-SUBSTANTIATION-002", "source_type": "synthetic", "recorded_on": "2026-08-20", "classification": "requirement", "disposition": "accepted_for_replay", "reviewer_alias": "synthetic-product-reviewer",
+      "rationale": "An objective product claim without declared evidence must not reach optimization review.",
+      "replay": {"creative_id": "CR-SEARCH-01", "claim_id": "CLAIM-001", "text": "The synthetic gift set contains three labeled tea tins.", "category": "objective_product_claim", "evidence_ids": []},
+      "expected": {"status": "blocked_claim_review", "release_blocked": true, "matched_rule_id": null}
+    },
+    {
+      "feedback_id": "FB-AUTOPUBLISH-003", "source_type": "synthetic", "recorded_on": "2026-08-20", "classification": "requirement", "disposition": "pending", "reviewer_alias": "synthetic-operations-reviewer",
+      "rationale": "Automatic publishing remains outside the approved product boundary."
+    }
+  ]
+}
