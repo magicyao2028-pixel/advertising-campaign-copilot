@@ -4,7 +4,7 @@
 
 v0.4 converts the earlier phrase list into an inspectable claim register. Each structured claim has a category, evidence links and a deterministic release decision. The result is a screening package for a human reviewer, not a platform-policy certification.
 
-The v0.5 fail-safe is intentionally conservative and content-bound. Every headline, message and releasable claim must exactly match text listed by a declared evidence record. Editing even one of those strings invalidates the binding and blocks release until a human updates the evidence package. Metric and phrase rules remain useful explanations for known high-risk language, but release safety no longer depends on an open-ended synonym or metric dictionary. Reporting, simulation or conditional text can still be over-blocked. A human reviewer must update the reviewed-text registry instead of weakening the release gate.
+The v0.5 fail-safe is intentionally conservative and content-bound. Every headline, message and releasable claim must exactly match normalized text listed by a declared evidence record. Leading and trailing whitespace is removed during input normalization; every other text change invalidates the binding and blocks release until a human updates the evidence package. Metric and phrase rules remain useful explanations for known high-risk language, but release safety no longer depends on an open-ended synonym or metric dictionary. Reporting, simulation or conditional text can still be over-blocked. A human reviewer must update the reviewed-text registry instead of weakening the release gate.
 
 ## Taxonomy
 
@@ -31,7 +31,7 @@ References explain why the prototype asks for substantiation or blocks high-risk
 - Any blocked claim prevents all optimization recommendations from being released.
 - Known high-risk phrases override a falsely declared `descriptive` category and record the override.
 - A descriptive or objective product claim whose exact text is absent from its referenced evidence is blocked.
-- Any headline or message absent from the reviewed-text registry is blocked, including harmless edits, until re-reviewed.
+- Any headline or message absent from the normalized reviewed-text registry is blocked, including harmless wording or punctuation edits, until re-reviewed.
 - Unknown evidence IDs fail input validation.
 - Human approval remains required after a claim passes the screening rules.
 - No ad, budget or creative is published by the program.

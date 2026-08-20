@@ -11,7 +11,7 @@
 - Feedback fixtures are synthetic and cannot be presented as advertiser, platform, or maintainer adoption.
 - Only explicitly accepted feedback is replayed; replay runs against an isolated copy and never mutates the bundled campaign.
 - Trial and feedback commands write local reports only and preserve zero platform writes.
-- The content-binding fail-safe deliberately blocks every unregistered or edited headline, message and descriptive claim, including harmless edits; this is a documented safety tradeoff, not a semantic compliance classifier.
+- The content-binding fail-safe deliberately blocks every unregistered headline, message and descriptive claim, plus any edit that changes normalized text; leading or trailing whitespace is ignored. This is a documented safety tradeoff, not a semantic compliance classifier.
 
 ## Safe-use rules
 

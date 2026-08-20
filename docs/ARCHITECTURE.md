@@ -38,7 +38,7 @@ The word *copilot* describes a reviewable application workflow. v0.5 uses determ
 - no credentials are required;
 - outputs contain recommendations, not commands;
 - `platform_write_executed` is always `false` in v0.5;
-- headlines, messages and releasable claims must exactly match text in a declared evidence record; any edit requires a new human-reviewed binding;
+- headlines, messages and releasable claims must exactly match normalized text in a declared evidence record; leading/trailing whitespace is ignored, while other edits require a new human-reviewed binding;
 - policy URLs are provenance for reviewer inspection, not a claim that the offline application continuously monitors platform rules;
 - only adjacent monthly observations with unchanged channel and creative are compared;
 - missing or incompatible observations remain visible as warnings instead of being silently interpolated.

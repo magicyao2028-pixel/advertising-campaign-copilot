@@ -27,7 +27,7 @@ When a team has a campaign objective, several creatives, and incomplete performa
 9. Reject objective/outcome semantic mismatches.
 10. Expose weighted factor evidence and deterministic policy scores.
 11. Preserve policy IDs, substantiation IDs, reasons and the checked date in the claim-review output.
-12. Bind every releasable claim, headline and message to exact text in the declared review evidence; edited or unregistered copy fails closed.
+12. Bind every releasable claim, headline and message to exact normalized text in the declared review evidence; wording, punctuation or internal-spacing edits and unregistered copy fail closed.
 
 ## Acceptance criteria
 
@@ -43,7 +43,7 @@ When a team has a campaign objective, several creatives, and incomplete performa
 - lead scoring accepts only `qualified_lead` outcomes;
 - every claim decision exposes its category, reason, evidence links and relevant public policy IDs;
 - unsupported objective claims and all high-risk guarantee, absolute-safety and health-outcome categories block release;
-- changing any reviewed creative text invalidates its evidence binding and blocks recommendation release;
+- changing any reviewed creative's normalized text invalidates its evidence binding and blocks recommendation release;
 - the sample can be rebuilt offline with no paid API.
 
 ## Out of scope
