@@ -269,6 +269,20 @@ class CampaignCopilotTests(unittest.TestCase):
             "The gift box contains three tea tins for regional customers.",
             "We are committed to customer support.",
             "Customers always see the listed package contents.",
+        )
+        for text in variants:
+            with self.subTest(text=text):
+                payload = sample_payload()
+                payload["creatives"][0]["claims"][0].update({
+                    "category": "descriptive", "text": text, "evidence_ids": [],
+                })
+                result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+                decision = result["creative_review"]["decisions"][0]
+                self.assertEqual(decision["decision"], "allowed_for_human_review")
+                self.assertIsNone(decision["matched_rule_id"])
+
+    def test_performance_metric_descriptions_fail_safe_even_in_governance_context(self):
+        variants = (
             "The report shows revenue. Human reviewers always approve budget changes.",
             "Customers can order twice per month.",
             "We promise revenue reports are delivered every Monday.",
@@ -285,9 +299,40 @@ class CampaignCopilotTests(unittest.TestCase):
                     "category": "descriptive", "text": text, "evidence_ids": [],
                 })
                 result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
-                decision = result["creative_review"]["decisions"][0]
-                self.assertEqual(decision["decision"], "allowed_for_human_review")
-                self.assertIsNone(decision["matched_rule_id"])
+                decision = result["creative_review"]["violations"][0]
+                self.assertTrue(result["creative_review"]["release_blocked"])
+                self.assertIn(decision["matched_rule_id"], {
+                    "CLAIM-PERFORMANCE-GUARANTEE", "CLAIM-PERFORMANCE-METRIC-FAILSAFE",
+                })
+                self.assertEqual(result["optimization_recommendations"], [])
+
+    def test_supported_metric_claims_fail_safe_when_open_ended_language_changes(self):
+        variants = (
+            "Revenue will surpass the baseline.",
+            "Sales will beat last month.",
+            "CPA will go down.",
+            "Traffic will go up.",
+            "Profit will be greater.",
+            "Orders are certain to multiply.",
+            "Sales are certain to explode.",
+            "Engagement will peak.",
+            "Clicks cannot go down.",
+            "We ensure more conversions.",
+            "Revenue will overtake the baseline.",
+        )
+        for text in variants:
+            with self.subTest(text=text):
+                payload = sample_payload()
+                payload["creatives"][0]["claims"][0].update({
+                    "category": "descriptive", "text": text, "evidence_ids": [],
+                })
+                result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+                violation = result["creative_review"]["violations"][0]
+                self.assertTrue(result["creative_review"]["release_blocked"])
+                self.assertIn(violation["matched_rule_id"], {
+                    "CLAIM-PERFORMANCE-GUARANTEE", "CLAIM-PERFORMANCE-METRIC-FAILSAFE",
+                })
+                self.assertEqual(result["optimization_recommendations"], [])
 
     def test_objective_claim_requires_declared_substantiation(self):
         payload = sample_payload()

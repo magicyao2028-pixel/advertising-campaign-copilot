@@ -87,7 +87,8 @@ HIGH_RISK_RULES = (
 
 PERFORMANCE_OUTCOME = re.compile(
     r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|"
-    r"leads?|traffic|clicks?|ctr|cvr|cpa|cpc|reach|impressions?|engagement)\b",
+    r"leads?|traffic|clicks?|ctr|cvr|cpa|cpc|reach|impressions?|engagement|growth|uplift|"
+    r"acquisition|retention|installs?|downloads?|subscribers?|signups?|bookings?|footfall|market\s+share)\b",
     re.IGNORECASE,
 )
 PERFORMANCE_PROMISE = re.compile(
@@ -140,6 +141,12 @@ def review_creative_claims(
         structured_rule_ids: set[str] = set()
         for claim in creative.claims:
             matched = _match_high_risk_rule(claim.text)
+            if not matched and claim.category == "descriptive" and PERFORMANCE_OUTCOME.search(claim.text):
+                matched = {
+                    "rule_id": "CLAIM-PERFORMANCE-METRIC-FAILSAFE",
+                    "category": "performance_guarantee",
+                    "matched_text": claim.text,
+                }
             if matched:
                 structured_rule_ids.add(matched["rule_id"])
             effective_category = matched["category"] if matched else claim.category
@@ -170,7 +177,16 @@ def review_creative_claims(
             })
 
         text = f"{creative.headline}. {creative.message}"
-        for matched in _find_high_risk_matches(text):
+        fallback_matches = _find_high_risk_matches(text)
+        if PERFORMANCE_OUTCOME.search(text) and not any(
+            item["category"] == "performance_guarantee" for item in fallback_matches
+        ):
+            fallback_matches.append({
+                "rule_id": "CLAIM-PERFORMANCE-METRIC-FAILSAFE",
+                "category": "performance_guarantee",
+                "matched_text": text,
+            })
+        for matched in fallback_matches:
             rule_id, category = matched["rule_id"], matched["category"]
             if rule_id not in structured_rule_ids:
                 _, policy_ids = CATEGORY_POLICY[category]

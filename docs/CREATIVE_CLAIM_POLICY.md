@@ -4,6 +4,8 @@
 
 v0.4 converts the earlier phrase list into an inspectable claim register. Each structured claim has a category, evidence links and a deterministic release decision. The result is a screening package for a human reviewer, not a platform-policy certification.
 
+The v0.5 fail-safe is intentionally conservative: a claim declared `descriptive`, or unregistered creative text, is blocked when it mentions a supported advertising or business-performance metric. The prototype does not attempt open-ended semantic intent classification, so reporting, simulation or conditional text can be over-blocked. A human reviewer must separate governance prose from creative claims rather than weakening this release gate.
+
 ## Taxonomy
 
 | Category | Prototype decision | Evidence rule |
