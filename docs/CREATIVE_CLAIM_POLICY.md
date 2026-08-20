@@ -4,19 +4,19 @@
 
 v0.4 converts the earlier phrase list into an inspectable claim register. Each structured claim has a category, evidence links and a deterministic release decision. The result is a screening package for a human reviewer, not a platform-policy certification.
 
-The v0.5 fail-safe is intentionally conservative: a claim declared `descriptive`, or unregistered creative text, is blocked when it mentions a supported advertising or business-performance metric. The prototype does not attempt open-ended semantic intent classification, so reporting, simulation or conditional text can be over-blocked. A human reviewer must separate governance prose from creative claims rather than weakening this release gate.
+The v0.5 fail-safe is intentionally conservative and content-bound. Every headline, message and releasable claim must exactly match text listed by a declared evidence record. Editing even one of those strings invalidates the binding and blocks release until a human updates the evidence package. Metric and phrase rules remain useful explanations for known high-risk language, but release safety no longer depends on an open-ended synonym or metric dictionary. Reporting, simulation or conditional text can still be over-blocked. A human reviewer must update the reviewed-text registry instead of weakening the release gate.
 
 ## Taxonomy
 
 | Category | Prototype decision | Evidence rule |
 | --- | --- | --- |
-| `descriptive` | allow for human review | no substantiation required by this narrow rule |
-| `objective_product_claim` | allow only with declared substantiation | at least one `product_substantiation` record |
+| `descriptive` | allow only when content-bound | exact text in a referenced `product_substantiation` record |
+| `objective_product_claim` | allow only with declared substantiation | exact text in a referenced `product_substantiation` record |
 | `performance_guarantee` | block | cannot be released by adding a local attachment |
 | `absolute_safety` | block | cannot be released by adding a local attachment |
 | `health_outcome` | block | outside this prototype's safe release scope |
 
-The free-text fallback uses three versioned concept-pattern rules for performance guarantees, absolute-safety language, and instant health outcomes. Any `guarantee` word-family match is fail-safe blocked regardless of distance from an outcome phrase or the declared category; this avoids grammar-length bypasses and records the matched rule. It remains a bounded screening taxonomy, not a complete semantic or legal classifier.
+The free-text fallback uses versioned concept-pattern rules for performance guarantees, absolute-safety language, and instant health outcomes. Any `guarantee` word-family match is fail-safe blocked regardless of distance from an outcome phrase or the declared category. Separately, an unregistered headline or message receives `CLAIM-UNREGISTERED-CREATIVE-SURFACE`; an unbound structured description also blocks. The patterns explain familiar cases, while exact content binding closes the unknown-vocabulary path. This remains a review workflow, not a semantic or legal classifier.
 
 ## Public policy references
 
@@ -30,7 +30,8 @@ References explain why the prototype asks for substantiation or blocks high-risk
 
 - Any blocked claim prevents all optimization recommendations from being released.
 - Known high-risk phrases override a falsely declared `descriptive` category and record the override.
-- An objective product claim with no declared substantiation is blocked.
+- A descriptive or objective product claim whose exact text is absent from its referenced evidence is blocked.
+- Any headline or message absent from the reviewed-text registry is blocked, including harmless edits, until re-reviewed.
 - Unknown evidence IDs fail input validation.
 - Human approval remains required after a claim passes the screening rules.
 - No ad, budget or creative is published by the program.

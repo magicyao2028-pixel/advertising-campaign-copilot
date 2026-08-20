@@ -39,9 +39,9 @@
 ## Creative claim policy review
 
 - **CR-SEARCH-01 / CLAIM-001 - allowed_for_human_review**: objective_product_claim — Declared substantiation is present; a human must still verify scope and applicability. Policies: FTC-AD-SUBSTANTIATION; substantiation: SPEC-SYNTH-001.
-- **CR-VIDEO-02 / CLAIM-002 - allowed_for_human_review**: descriptive — Descriptive claim; human policy review remains required. Policies: prototype descriptive rule; substantiation: none.
-- **CR-SOCIAL-03 / CLAIM-003 - allowed_for_human_review**: descriptive — Descriptive claim; human policy review remains required. Policies: prototype descriptive rule; substantiation: none.
-- **CR-MARKET-04 / CLAIM-004 - allowed_for_human_review**: descriptive — Descriptive claim; human policy review remains required. Policies: prototype descriptive rule; substantiation: none.
+- **CR-VIDEO-02 / CLAIM-002 - allowed_for_human_review**: descriptive — Descriptive text is content-bound to declared evidence; human policy review remains required. Policies: prototype descriptive rule; substantiation: SPEC-SYNTH-001.
+- **CR-SOCIAL-03 / CLAIM-003 - allowed_for_human_review**: descriptive — Descriptive text is content-bound to declared evidence; human policy review remains required. Policies: prototype descriptive rule; substantiation: SPEC-SYNTH-001.
+- **CR-MARKET-04 / CLAIM-004 - allowed_for_human_review**: descriptive — Descriptive text is content-bound to declared evidence; human policy review remains required. Policies: prototype descriptive rule; substantiation: SPEC-SYNTH-001.
 
 ## Claim policy references
 

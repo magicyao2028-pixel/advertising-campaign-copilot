@@ -19,6 +19,7 @@ The business scenario is an internal AI-application exploration for Changsha Shi
 - a structured creative-claim taxonomy with declared substantiation records;
 - dated Google and FTC policy references plus an explicit non-certification boundary;
 - fail-safe blocking for unsupported objective claims and high-risk guarantee, safety, or health categories;
+- exact evidence binding for every releasable claim, headline, and message so edited or unregistered copy fails closed;
 - bounded recommendations: scale candidate, hold and test, or pause and review;
 - objective-specific policies with visible factors, weights, thresholds and scores;
 - explicit outcome semantics so lead policies cannot silently score purchase events;

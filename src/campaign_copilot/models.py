@@ -28,6 +28,7 @@ class ClaimEvidence:
     title: str
     evidence_type: str
     reference: str
+    supported_texts: tuple[str, ...]
 
     @classmethod
     def from_mapping(cls, value: dict[str, Any]) -> "ClaimEvidence":
@@ -36,6 +37,7 @@ class ClaimEvidence:
             title=str(value.get("title", "")).strip(),
             evidence_type=str(value.get("evidence_type", "")).strip(),
             reference=str(value.get("reference", "")).strip(),
+            supported_texts=_strings(value.get("supported_texts", []), "supported_texts"),
         )
         if not all((item.evidence_id, item.title, item.evidence_type, item.reference)):
             raise ValueError("claim evidence fields must not be blank")

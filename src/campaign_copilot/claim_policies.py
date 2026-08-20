@@ -51,11 +51,12 @@ POLICY_REFERENCES = {
 
 
 CATEGORY_POLICY = {
-    "descriptive": ("allow", ()),
+    "descriptive": ("require_content_binding", ()),
     "objective_product_claim": ("require_substantiation", ("FTC-AD-SUBSTANTIATION",)),
     "performance_guarantee": ("block", ("GOOGLE-UNRELIABLE-CLAIMS", "FTC-AD-SUBSTANTIATION")),
     "absolute_safety": ("block", ("GOOGLE-UNRELIABLE-CLAIMS", "FTC-AD-SUBSTANTIATION")),
     "health_outcome": ("block", ("FTC-HEALTH-CLAIMS",)),
+    "unregistered_creative_surface": ("block", ()),
 }
 
 HIGH_RISK_RULES = (
@@ -134,6 +135,9 @@ def review_creative_claims(
     evidence: tuple[ClaimEvidence, ...],
 ) -> dict[str, Any]:
     evidence_by_id = {item.evidence_id: item for item in evidence}
+    registered_surface_texts = {
+        text for item in evidence for text in item.supported_texts
+    }
     decisions: list[dict[str, Any]] = []
     referenced_policy_ids: set[str] = set()
 
@@ -156,8 +160,11 @@ def review_creative_claims(
                 evidence_by_id[evidence_id]
                 for evidence_id in claim.evidence_ids
                 if evidence_by_id[evidence_id].evidence_type == "product_substantiation"
+                and claim.text in evidence_by_id[evidence_id].supported_texts
             ]
-            blocked = action == "block" or (action == "require_substantiation" and not substantiation)
+            blocked = action == "block" or (
+                action in {"require_substantiation", "require_content_binding"} and not substantiation
+            )
             reason = _reason(action, bool(substantiation))
             if effective_category != claim.category:
                 reason = "A high-risk phrase overrides the declared category. " + reason
@@ -176,35 +183,41 @@ def review_creative_claims(
                 "substantiation_ids": [item.evidence_id for item in substantiation],
             })
 
-        text = f"{creative.headline}. {creative.message}"
-        fallback_matches = _find_high_risk_matches(text)
-        if PERFORMANCE_OUTCOME.search(text) and not any(
-            item["category"] == "performance_guarantee" for item in fallback_matches
-        ):
-            fallback_matches.append({
-                "rule_id": "CLAIM-PERFORMANCE-METRIC-FAILSAFE",
-                "category": "performance_guarantee",
-                "matched_text": text,
-            })
-        for matched in fallback_matches:
-            rule_id, category = matched["rule_id"], matched["category"]
-            if rule_id not in structured_rule_ids:
-                _, policy_ids = CATEGORY_POLICY[category]
-                referenced_policy_ids.update(policy_ids)
-                decisions.append({
-                    "creative_id": creative.creative_id,
-                    "claim_id": None,
-                    "claim": matched["matched_text"],
-                    "declared_category": None,
-                    "category": category,
-                    "category_override_applied": True,
-                    "matched_rule_id": rule_id,
-                    "matched_text": matched["matched_text"],
-                    "decision": "blocked",
-                    "reason": "A high-risk phrase was found outside the structured claim register.",
-                    "policy_ids": list(policy_ids),
-                    "substantiation_ids": [],
+        for surface_name, text in (("headline", creative.headline), ("message", creative.message)):
+            fallback_matches = _find_high_risk_matches(text)
+            if PERFORMANCE_OUTCOME.search(text) and not any(
+                item["category"] == "performance_guarantee" for item in fallback_matches
+            ):
+                fallback_matches.append({
+                    "rule_id": "CLAIM-PERFORMANCE-METRIC-FAILSAFE",
+                    "category": "performance_guarantee",
+                    "matched_text": text,
                 })
+            if not fallback_matches and text not in registered_surface_texts:
+                fallback_matches.append({
+                    "rule_id": "CLAIM-UNREGISTERED-CREATIVE-SURFACE",
+                    "category": "unregistered_creative_surface",
+                    "matched_text": text,
+                })
+            for matched in fallback_matches:
+                rule_id, category = matched["rule_id"], matched["category"]
+                if rule_id not in structured_rule_ids:
+                    _, policy_ids = CATEGORY_POLICY[category]
+                    referenced_policy_ids.update(policy_ids)
+                    decisions.append({
+                        "creative_id": creative.creative_id,
+                        "claim_id": None,
+                        "claim": matched["matched_text"],
+                        "declared_category": None,
+                        "category": category,
+                        "category_override_applied": True,
+                        "matched_rule_id": rule_id,
+                        "matched_text": matched["matched_text"],
+                        "decision": "blocked",
+                        "reason": f"The {surface_name} is high-risk or is not exactly bound to declared evidence.",
+                        "policy_ids": list(policy_ids),
+                        "substantiation_ids": [],
+                    })
 
     blocked = [item for item in decisions if item["decision"] == "blocked"]
     return {
@@ -280,4 +293,8 @@ def _reason(action: str, substantiated: bool) -> str:
         return "Objective product claims require a declared substantiation record before release."
     if action == "require_substantiation":
         return "Declared substantiation is present; a human must still verify scope and applicability."
-    return "Descriptive claim; human policy review remains required."
+    if action == "require_content_binding" and not substantiated:
+        return "Descriptive text must exactly match a text bound to declared review evidence."
+    if action == "require_content_binding":
+        return "Descriptive text is content-bound to declared evidence; human policy review remains required."
+    return "Human policy review remains required."

@@ -273,13 +273,83 @@ class CampaignCopilotTests(unittest.TestCase):
         for text in variants:
             with self.subTest(text=text):
                 payload = sample_payload()
+                payload["claim_evidence"][0]["supported_texts"].append(text)
                 payload["creatives"][0]["claims"][0].update({
-                    "category": "descriptive", "text": text, "evidence_ids": [],
+                    "category": "descriptive", "text": text, "evidence_ids": ["SPEC-SYNTH-001"],
                 })
                 result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
                 decision = result["creative_review"]["decisions"][0]
                 self.assertEqual(decision["decision"], "allowed_for_human_review")
                 self.assertIsNone(decision["matched_rule_id"])
+
+    def test_descriptive_text_binding_is_exact_and_fails_closed_after_edit(self):
+        payload = sample_payload()
+        claim = payload["creatives"][1]["claims"][0]
+        self.assertEqual(claim["evidence_ids"], ["SPEC-SYNTH-001"])
+        allowed = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        allowed_claim = next(
+            item for item in allowed["creative_review"]["decisions"]
+            if item["claim_id"] == claim["claim_id"]
+        )
+        self.assertEqual(allowed_claim["decision"], "allowed_for_human_review")
+
+        claim["text"] = "The concept focuses on packaging and guaranteed CAC reduction."
+        blocked = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        blocked_claim = next(
+            item for item in blocked["creative_review"]["violations"]
+            if item["claim_id"] == claim["claim_id"]
+        )
+        self.assertEqual(blocked_claim["decision"], "blocked")
+        self.assertEqual(blocked["optimization_recommendations"], [])
+
+    def test_unregistered_headline_or_message_fails_closed(self):
+        for field, text in (
+            ("headline", "CAC will fall."),
+            ("message", "Brand awareness will double."),
+        ):
+            with self.subTest(field=field):
+                payload = sample_payload()
+                payload["creatives"][0][field] = text
+                result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+                violation = next(
+                    item for item in result["creative_review"]["violations"]
+                    if item["claim_id"] is None and item["claim"] == text
+                )
+                self.assertTrue(result["creative_review"]["release_blocked"])
+                self.assertEqual(result["optimization_recommendations"], [])
+                self.assertIn(violation["matched_rule_id"], {
+                    "CLAIM-PERFORMANCE-METRIC-FAILSAFE",
+                    "CLAIM-PERFORMANCE-GUARANTEE",
+                    "CLAIM-UNREGISTERED-CREATIVE-SURFACE",
+                })
+
+    def test_unregistered_performance_vocabulary_fails_closed_across_surfaces(self):
+        variants = (
+            "CAC will fall.",
+            "LTV will double.",
+            "AOV will rise.",
+            "Brand awareness will double.",
+            "Customer base will triple.",
+            "Churn will halve.",
+            "Bounce rate will drop.",
+            "Store visits will double.",
+            "App activations will triple.",
+            "Purchase frequency will rise.",
+            "Pipeline value will double.",
+        )
+        for text in variants:
+            for surface in ("claim", "headline", "message"):
+                with self.subTest(text=text, surface=surface):
+                    payload = sample_payload()
+                    if surface == "claim":
+                        payload["creatives"][0]["claims"][0].update({
+                            "category": "descriptive", "text": text, "evidence_ids": [],
+                        })
+                    else:
+                        payload["creatives"][0][surface] = text
+                    result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+                    self.assertTrue(result["creative_review"]["release_blocked"])
+                    self.assertEqual(result["optimization_recommendations"], [])
 
     def test_performance_metric_descriptions_fail_safe_even_in_governance_context(self):
         variants = (

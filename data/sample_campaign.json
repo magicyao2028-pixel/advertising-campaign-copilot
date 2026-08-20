@@ -22,7 +22,21 @@
       "evidence_id": "SPEC-SYNTH-001",
       "title": "Synthetic product configuration sheet",
       "evidence_type": "product_substantiation",
-      "reference": "Public-safe demonstration fixture; not a real product specification"
+      "reference": "Public-safe demonstration fixture; not a real product specification",
+      "supported_texts": [
+        "Seasonal tea gift set",
+        "Explore a synthetic gift-set campaign concept for the holiday period.",
+        "The synthetic gift set contains three labeled tea tins.",
+        "A calm tea ritual",
+        "A short-video concept focused on packaging, origin story and serving moments.",
+        "The concept focuses on packaging and serving moments.",
+        "Gift planning guide",
+        "A social-feed concept comparing synthetic gift occasions and package sizes.",
+        "The concept compares synthetic gift occasions and package sizes.",
+        "Tea gift selection page",
+        "A synthetic marketplace concept showing gift occasions and package details.",
+        "The concept shows gift occasions and package details."
+      ]
     }
   ],
   "creatives": [
@@ -48,7 +62,7 @@
           "claim_id": "CLAIM-002",
           "text": "The concept focuses on packaging and serving moments.",
           "category": "descriptive",
-          "evidence_ids": []
+          "evidence_ids": ["SPEC-SYNTH-001"]
         }
       ]
     },
@@ -61,7 +75,7 @@
           "claim_id": "CLAIM-003",
           "text": "The concept compares synthetic gift occasions and package sizes.",
           "category": "descriptive",
-          "evidence_ids": []
+          "evidence_ids": ["SPEC-SYNTH-001"]
         }
       ]
     },
@@ -74,7 +88,7 @@
           "claim_id": "CLAIM-004",
           "text": "The concept shows gift occasions and package details.",
           "category": "descriptive",
-          "evidence_ids": []
+          "evidence_ids": ["SPEC-SYNTH-001"]
         }
       ]
     }

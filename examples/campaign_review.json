@@ -75,9 +75,11 @@
         "matched_rule_id": null,
         "matched_text": null,
         "decision": "allowed_for_human_review",
-        "reason": "Descriptive claim; human policy review remains required.",
+        "reason": "Descriptive text is content-bound to declared evidence; human policy review remains required.",
         "policy_ids": [],
-        "substantiation_ids": []
+        "substantiation_ids": [
+          "SPEC-SYNTH-001"
+        ]
       },
       {
         "creative_id": "CR-SOCIAL-03",
@@ -89,9 +91,11 @@
         "matched_rule_id": null,
         "matched_text": null,
         "decision": "allowed_for_human_review",
-        "reason": "Descriptive claim; human policy review remains required.",
+        "reason": "Descriptive text is content-bound to declared evidence; human policy review remains required.",
         "policy_ids": [],
-        "substantiation_ids": []
+        "substantiation_ids": [
+          "SPEC-SYNTH-001"
+        ]
       },
       {
         "creative_id": "CR-MARKET-04",
@@ -103,9 +107,11 @@
         "matched_rule_id": null,
         "matched_text": null,
         "decision": "allowed_for_human_review",
-        "reason": "Descriptive claim; human policy review remains required.",
+        "reason": "Descriptive text is content-bound to declared evidence; human policy review remains required.",
         "policy_ids": [],
-        "substantiation_ids": []
+        "substantiation_ids": [
+          "SPEC-SYNTH-001"
+        ]
       }
     ],
     "violations": [],
