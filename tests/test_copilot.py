@@ -215,6 +215,14 @@ class CampaignCopilotTests(unittest.TestCase):
             "We assure every advertiser of improved results.",
             "Revenue will double after this campaign.",
             "Higher conversion results are promised.",
+            "We commit to doubling your sales.",
+            "Your sales are certain to double.",
+            "You will get twice as many sales.",
+            "We ensure that your revenue doubles.",
+            "Double your revenue, no matter what.",
+            "Revenue doubles every time.",
+            "Sales always double.",
+            "Your returns are sure to rise.",
         )
         for text in variants:
             with self.subTest(text=text):
@@ -227,6 +235,18 @@ class CampaignCopilotTests(unittest.TestCase):
                 self.assertTrue(result["creative_review"]["release_blocked"])
                 self.assertEqual(violation["matched_rule_id"], "CLAIM-PERFORMANCE-GUARANTEE")
                 self.assertEqual(result["optimization_recommendations"], [])
+
+    def test_ordinary_descriptive_claim_does_not_trigger_performance_structure(self):
+        payload = sample_payload()
+        payload["creatives"][0]["claims"][0].update({
+            "category": "descriptive",
+            "text": "The gift box contains three tea tins for regional customers.",
+            "evidence_ids": [],
+        })
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        decision = result["creative_review"]["decisions"][0]
+        self.assertEqual(decision["decision"], "allowed_for_human_review")
+        self.assertIsNone(decision["matched_rule_id"])
 
     def test_objective_claim_requires_declared_substantiation(self):
         payload = sample_payload()

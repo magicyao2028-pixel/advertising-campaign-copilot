@@ -91,6 +91,25 @@ HIGH_RISK_RULES = (
     ),
 )
 
+PERFORMANCE_OUTCOME = re.compile(
+    r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|customers?)\b",
+    re.IGNORECASE,
+)
+PERFORMANCE_CERTAINTY = re.compile(
+    r"\b(?:promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)|pledge(?:s|d|ing)?|"
+    r"commit(?:s|ted|ting)?|ensur(?:e|es|ed|ing)|certain(?:ly)?|sure(?:ly)?|"
+    r"always|inevitabl(?:e|y)|definitel(?:y)|every\s+time|no\s+matter\s+what)\b",
+    re.IGNORECASE,
+)
+PERFORMANCE_MULTIPLIER = re.compile(
+    r"\b(?:double[ds]?|doubling|triple[ds]?|tripling|twice|2x|3x)\b",
+    re.IGNORECASE,
+)
+PERFORMANCE_CERTAIN_GROWTH = re.compile(
+    r"\b(?:will|shall)\b[^.!?\n]{0,80}\b(?:increase[ds]?|grow[sn]?|improve[ds]?|rise[sn]?|double[ds]?|triple[ds]?)\b",
+    re.IGNORECASE,
+)
+
 
 def review_creative_claims(
     creatives: tuple[Creative, ...],
@@ -133,21 +152,21 @@ def review_creative_claims(
                 "substantiation_ids": [item.evidence_id for item in substantiation],
             })
 
-        text = f"{creative.headline} {creative.message}".casefold()
-        for rule_id, category, pattern in HIGH_RISK_RULES:
-            match = pattern.search(text)
-            if match and rule_id not in structured_rule_ids:
+        text = f"{creative.headline} {creative.message}"
+        for matched in _find_high_risk_matches(text):
+            rule_id, category = matched["rule_id"], matched["category"]
+            if rule_id not in structured_rule_ids:
                 _, policy_ids = CATEGORY_POLICY[category]
                 referenced_policy_ids.update(policy_ids)
                 decisions.append({
                     "creative_id": creative.creative_id,
                     "claim_id": None,
-                    "claim": match.group(0),
+                    "claim": matched["matched_text"],
                     "declared_category": None,
                     "category": category,
                     "category_override_applied": True,
                     "matched_rule_id": rule_id,
-                    "matched_text": match.group(0),
+                    "matched_text": matched["matched_text"],
                     "decision": "blocked",
                     "reason": "A high-risk phrase was found outside the structured claim register.",
                     "policy_ids": list(policy_ids),
@@ -168,11 +187,41 @@ def review_creative_claims(
 
 
 def _match_high_risk_rule(text: str) -> dict[str, str] | None:
+    matches = _find_high_risk_matches(text)
+    return matches[0] if matches else None
+
+
+def _find_high_risk_matches(text: str) -> list[dict[str, str]]:
+    matches: list[dict[str, str]] = []
+    performance = _match_performance_guarantee(text)
+    if performance:
+        matches.append(performance)
     for rule_id, category, pattern in HIGH_RISK_RULES:
+        if rule_id == "CLAIM-PERFORMANCE-GUARANTEE":
+            continue
         match = pattern.search(text)
         if match:
-            return {"rule_id": rule_id, "category": category, "matched_text": match.group(0)}
-    return None
+            matches.append({"rule_id": rule_id, "category": category, "matched_text": match.group(0)})
+    return matches
+
+
+def _match_performance_guarantee(text: str) -> dict[str, str] | None:
+    direct_pattern = HIGH_RISK_RULES[0][2]
+    direct = direct_pattern.search(text)
+    has_outcome = PERFORMANCE_OUTCOME.search(text)
+    structural = has_outcome and (
+        PERFORMANCE_CERTAINTY.search(text)
+        or PERFORMANCE_MULTIPLIER.search(text)
+        or PERFORMANCE_CERTAIN_GROWTH.search(text)
+    )
+    if not direct and not structural:
+        return None
+    matched_text = direct.group(0) if direct else text.strip()
+    return {
+        "rule_id": "CLAIM-PERFORMANCE-GUARANTEE",
+        "category": "performance_guarantee",
+        "matched_text": matched_text,
+    }
 
 
 def _reason(action: str, substantiated: bool) -> str:
