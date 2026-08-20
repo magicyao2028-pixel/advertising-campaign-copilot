@@ -209,6 +209,25 @@ class CampaignCopilotTests(unittest.TestCase):
                 self.assertEqual(violation["matched_rule_id"], "CLAIM-PERFORMANCE-GUARANTEE")
                 self.assertEqual(result["optimization_recommendations"], [])
 
+    def test_performance_promise_variants_cannot_bypass_category_override(self):
+        variants = (
+            "We promise sales will double.",
+            "We assure every advertiser of improved results.",
+            "Revenue will double after this campaign.",
+            "Higher conversion results are promised.",
+        )
+        for text in variants:
+            with self.subTest(text=text):
+                payload = sample_payload()
+                payload["creatives"][0]["claims"][0].update({
+                    "category": "descriptive", "text": text, "evidence_ids": [],
+                })
+                result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+                violation = result["creative_review"]["violations"][0]
+                self.assertTrue(result["creative_review"]["release_blocked"])
+                self.assertEqual(violation["matched_rule_id"], "CLAIM-PERFORMANCE-GUARANTEE")
+                self.assertEqual(result["optimization_recommendations"], [])
+
     def test_objective_claim_requires_declared_substantiation(self):
         payload = sample_payload()
         payload["creatives"][0]["claims"][0]["evidence_ids"] = []
@@ -274,6 +293,31 @@ class CampaignCopilotTests(unittest.TestCase):
         payload["performance"][0]["clicks"] = 130000
         with self.assertRaisesRegex(ValueError, "monotonic"):
             CampaignBrief.from_mapping(payload)
+
+    def test_rejects_non_finite_and_boolean_numeric_inputs(self):
+        for field in ("total_budget", "target_roas", "target_cpa", "max_reallocation_pct"):
+            for invalid in ("NaN", "Infinity", "-Infinity", True):
+                with self.subTest(field=field, value=invalid):
+                    payload = sample_payload()
+                    payload[field] = invalid
+                    with self.assertRaisesRegex(ValueError, "finite number"):
+                        CampaignBrief.from_mapping(payload)
+
+        for field in ("spend", "revenue"):
+            for invalid in ("NaN", "Infinity", "-Infinity", True):
+                with self.subTest(field=field, value=invalid):
+                    payload = sample_payload()
+                    payload["performance"][0][field] = invalid
+                    with self.assertRaisesRegex(ValueError, "finite number"):
+                        CampaignBrief.from_mapping(payload)
+
+    def test_rejects_boolean_fractional_and_non_finite_funnel_counts(self):
+        for invalid in (True, 3.5, "NaN", "Infinity"):
+            with self.subTest(value=invalid):
+                payload = sample_payload()
+                payload["performance"][0]["clicks"] = invalid
+                with self.assertRaisesRegex(ValueError, "finite number|non-negative integer"):
+                    CampaignBrief.from_mapping(payload)
 
     def test_reallocation_ceiling_cannot_exceed_twenty_percent(self):
         payload = sample_payload()

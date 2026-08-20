@@ -63,7 +63,13 @@ HIGH_RISK_RULES = (
         "CLAIM-PERFORMANCE-GUARANTEE",
         "performance_guarantee",
         re.compile(
-            r"\bguarante(?:e|es|ed|eing)\b|\bno\s+exceptions?\b",
+            r"\bguarante(?:e|es|ed|eing)\b|\bno\s+exceptions?\b|"
+            r"\b(?:promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)|pledge(?:s|d|ing)?)\b"
+            r"[^.!?\n]{0,160}\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|customers?)\b|"
+            r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|customers?)\b"
+            r"[^.!?\n]{0,160}\b(?:promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)|pledge(?:s|d|ing)?)\b|"
+            r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?)\b"
+            r"[^.!?\n]{0,80}\b(?:will|shall)\s+(?:double|triple|increase|grow|improve|rise)\b",
             re.IGNORECASE,
         ),
     ),

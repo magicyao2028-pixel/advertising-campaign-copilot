@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -109,11 +110,11 @@ class PerformanceCell:
             channel=str(value.get("channel", "")).strip(),
             creative_id=str(value.get("creative_id", "")).strip(),
             source_id=str(value.get("source_id", "")).strip(),
-            spend=float(value.get("spend", 0)),
-            impressions=int(value.get("impressions", 0)),
-            clicks=int(value.get("clicks", 0)),
-            conversions=int(value.get("conversions", 0)),
-            revenue=float(value.get("revenue", 0)),
+            spend=_finite_number(value.get("spend", 0), "performance spend"),
+            impressions=_nonnegative_integer(value.get("impressions", 0), "performance impressions"),
+            clicks=_nonnegative_integer(value.get("clicks", 0), "performance clicks"),
+            conversions=_nonnegative_integer(value.get("conversions", 0), "performance conversions"),
+            revenue=_finite_number(value.get("revenue", 0), "performance revenue"),
         )
         if not all((item.cell_id, item.period, item.channel, item.creative_id, item.source_id)):
             raise ValueError("performance identity and period fields must not be blank")
@@ -173,10 +174,10 @@ class CampaignBrief:
             product=str(value.get("product", "")).strip(),
             audience=str(value.get("audience", "")).strip(),
             currency=str(value.get("currency", "")).strip().upper(),
-            total_budget=float(value.get("total_budget", 0)),
-            target_roas=float(value.get("target_roas", 0)),
-            target_cpa=float(value.get("target_cpa", 0)),
-            max_reallocation_pct=float(value.get("max_reallocation_pct", 0)),
+            total_budget=_finite_number(value.get("total_budget", 0), "total_budget"),
+            target_roas=_finite_number(value.get("target_roas", 0), "target_roas"),
+            target_cpa=_finite_number(value.get("target_cpa", 0), "target_cpa"),
+            max_reallocation_pct=_finite_number(value.get("max_reallocation_pct", 0), "max_reallocation_pct"),
             human_owner=str(value.get("human_owner", "")).strip(),
             channels=channels,
             constraints=_strings(value.get("constraints", []), "constraints", allow_empty=True),
@@ -224,6 +225,25 @@ def period_index(period: str) -> int:
 def validate_period(period: str, field: str) -> None:
     if not PERIOD_PATTERN.fullmatch(period):
         raise ValueError(f"{field} must use YYYY-MM")
+
+
+def _finite_number(value: Any, field: str) -> float:
+    if isinstance(value, bool):
+        raise ValueError(f"{field} must be a finite number, not a boolean")
+    try:
+        number = float(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{field} must be a finite number") from exc
+    if not math.isfinite(number):
+        raise ValueError(f"{field} must be a finite number")
+    return number
+
+
+def _nonnegative_integer(value: Any, field: str) -> int:
+    number = _finite_number(value, field)
+    if not number.is_integer() or number < 0:
+        raise ValueError(f"{field} must be a non-negative integer")
+    return int(number)
 
 
 def _strings(value: Any, field: str, allow_empty: bool = False) -> tuple[str, ...]:
