@@ -100,18 +100,30 @@ PERFORMANCE_COMMITMENT = re.compile(
 )
 PERFORMANCE_CERTAINTY = re.compile(
     r"\b(?:certain(?:ly)?|sure(?:ly)?|always|inevitabl(?:e|y)|definitel(?:y)|bound|destined|"
-    r"every\s+time|no\s+matter\s+what|cannot\s+fail)\b",
+    r"set\s+to|going\s+to|must|cannot|every\s+time|no\s+matter\s+what|cannot\s+fail)\b",
     re.IGNORECASE,
 )
 PERFORMANCE_MODAL = re.compile(r"\b(?:will|shall)\b", re.IGNORECASE)
 PERFORMANCE_CHANGE = re.compile(
     r"\b(?:double[ds]?|doubling|triple[ds]?|tripling|twice|2x|3x|increase[ds]?|increasing|"
-    r"grow(?:s|ing|n)?|improve[ds]?|improving|rise[sn]?|rising|fall(?:s|ing)?|drop(?:s|ped|ping)?|half)\b",
+    r"grow(?:s|ing|n)?|improve[ds]?|improving|rise[sn]?|rising|fall(?:s|ing)?|drop(?:s|ped|ping)?|"
+    r"decreas(?:e|es|ed|ing)|climb(?:s|ed|ing)?|soar(?:s|ed|ing)?|surg(?:e|es|ed|ing)|jump(?:s|ed|ing)?|"
+    r"boost(?:s|ed|ing)?|skyrocket(?:s|ed|ing)?|lift(?:s|ed|ing)?|reduc(?:e|es|ed|ing)|cut(?:s|ting)?|"
+    r"halv(?:e|es|ed|ing)|higher|lower|better|worse|outperform(?:s|ed|ing)?|exceed(?:s|ed|ing)?|half)\b",
     re.IGNORECASE,
 )
 PERFORMANCE_IMPERATIVE = re.compile(
-    r"\b(?:double|triple|2x|3x)\s+(?:your\s+)?(?:sales?|revenue|results?|returns?|conversions?|profit|orders?|leads?|traffic|clicks?|reach|impressions?|engagement)\b|"
+    r"\b(?:double|triple|2x|3x|increase|improve|grow|boost|lift|raise|cut|halve|reduce)\s+(?:your\s+)?(?:sales?|revenue|results?|returns?|conversions?|profit|orders?|leads?|traffic|clicks?|ctr|cvr|cpa|cpc|reach|impressions?|engagement)\b|"
     r"\b(?:twice|three\s+times)\s+as\s+many\s+(?:sales?|orders?|leads?|clicks?|conversions?)\b",
+    re.IGNORECASE,
+)
+PERFORMANCE_GOVERNANCE_CONTEXT = re.compile(
+    r"\b(?:reports?|reporting|reported|reviews?|reviewed|reviewing|simulation|scenario|historical|"
+    r"baseline|input|evidence|human|approval|approves?|approved)\b",
+    re.IGNORECASE,
+)
+PERFORMANCE_CONDITIONAL = re.compile(
+    r"\b(?:if|when|unless|depending\s+on|subject\s+to|may|might|could|only\s+if)\b",
     re.IGNORECASE,
 )
 
@@ -223,8 +235,12 @@ def _match_performance_guarantee(text: str) -> dict[str, str] | None:
         if not PERFORMANCE_OUTCOME.search(sentence):
             continue
         change = PERFORMANCE_CHANGE.search(sentence)
+        governance = PERFORMANCE_GOVERNANCE_CONTEXT.search(sentence)
+        conditional = PERFORMANCE_CONDITIONAL.search(sentence)
+        if governance and (not change or conditional):
+            continue
         structural = (
-            PERFORMANCE_PROMISE.search(sentence)
+            (PERFORMANCE_PROMISE.search(sentence) and (change or not governance))
             or PERFORMANCE_IMPERATIVE.search(sentence)
             or (change and (
                 PERFORMANCE_COMMITMENT.search(sentence)

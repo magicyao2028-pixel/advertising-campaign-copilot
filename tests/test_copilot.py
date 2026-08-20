@@ -237,6 +237,20 @@ class CampaignCopilotTests(unittest.TestCase):
             "ROAS cannot fail to improve.",
             "Revenue is bound to rise.",
             "Sales are destined to grow.",
+            "CPA will decrease.",
+            "CTR will climb.",
+            "Clicks will soar.",
+            "Traffic will surge.",
+            "Profit will jump.",
+            "Conversions will be higher.",
+            "We ensure higher sales.",
+            "We commit to higher revenue.",
+            "Sales are certain to surge.",
+            "Revenue is set to double.",
+            "ROAS is destined to climb.",
+            "Leads must double.",
+            "Sales are going to double.",
+            "Traffic cannot decrease.",
         )
         for text in variants:
             with self.subTest(text=text):
@@ -257,6 +271,12 @@ class CampaignCopilotTests(unittest.TestCase):
             "Customers always see the listed package contents.",
             "The report shows revenue. Human reviewers always approve budget changes.",
             "Customers can order twice per month.",
+            "We promise revenue reports are delivered every Monday.",
+            "We pledge transparent reporting of campaign performance.",
+            "We promise results are reviewed by a person.",
+            "Revenue will increase or decrease depending on evidence.",
+            "Clicks will increase in the simulation if input changes.",
+            "Sales will increase only if a human approves the change.",
         )
         for text in variants:
             with self.subTest(text=text):
