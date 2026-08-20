@@ -223,6 +223,20 @@ class CampaignCopilotTests(unittest.TestCase):
             "Revenue doubles every time.",
             "Sales always double.",
             "Your returns are sure to rise.",
+            "Qualified leads are certain to double.",
+            "Leads will double.",
+            "Website traffic will double.",
+            "Clicks will triple.",
+            "CTR will increase.",
+            "CVR is certain to improve.",
+            "CPA will fall by half.",
+            "CPC always falls.",
+            "Reach will double.",
+            "Impressions will triple.",
+            "Engagement is sure to rise.",
+            "ROAS cannot fail to improve.",
+            "Revenue is bound to rise.",
+            "Sales are destined to grow.",
         )
         for text in variants:
             with self.subTest(text=text):
@@ -237,16 +251,23 @@ class CampaignCopilotTests(unittest.TestCase):
                 self.assertEqual(result["optimization_recommendations"], [])
 
     def test_ordinary_descriptive_claim_does_not_trigger_performance_structure(self):
-        payload = sample_payload()
-        payload["creatives"][0]["claims"][0].update({
-            "category": "descriptive",
-            "text": "The gift box contains three tea tins for regional customers.",
-            "evidence_ids": [],
-        })
-        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
-        decision = result["creative_review"]["decisions"][0]
-        self.assertEqual(decision["decision"], "allowed_for_human_review")
-        self.assertIsNone(decision["matched_rule_id"])
+        variants = (
+            "The gift box contains three tea tins for regional customers.",
+            "We are committed to customer support.",
+            "Customers always see the listed package contents.",
+            "The report shows revenue. Human reviewers always approve budget changes.",
+            "Customers can order twice per month.",
+        )
+        for text in variants:
+            with self.subTest(text=text):
+                payload = sample_payload()
+                payload["creatives"][0]["claims"][0].update({
+                    "category": "descriptive", "text": text, "evidence_ids": [],
+                })
+                result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+                decision = result["creative_review"]["decisions"][0]
+                self.assertEqual(decision["decision"], "allowed_for_human_review")
+                self.assertIsNone(decision["matched_rule_id"])
 
     def test_objective_claim_requires_declared_substantiation(self):
         payload = sample_payload()

@@ -63,13 +63,7 @@ HIGH_RISK_RULES = (
         "CLAIM-PERFORMANCE-GUARANTEE",
         "performance_guarantee",
         re.compile(
-            r"\bguarante(?:e|es|ed|eing)\b|\bno\s+exceptions?\b|"
-            r"\b(?:promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)|pledge(?:s|d|ing)?)\b"
-            r"[^.!?\n]{0,160}\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|customers?)\b|"
-            r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|customers?)\b"
-            r"[^.!?\n]{0,160}\b(?:promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)|pledge(?:s|d|ing)?)\b|"
-            r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?)\b"
-            r"[^.!?\n]{0,80}\b(?:will|shall)\s+(?:double|triple|increase|grow|improve|rise)\b",
+            r"\bguarante(?:e|es|ed|eing)\b|\bno\s+exceptions?\b",
             re.IGNORECASE,
         ),
     ),
@@ -92,21 +86,32 @@ HIGH_RISK_RULES = (
 )
 
 PERFORMANCE_OUTCOME = re.compile(
-    r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|customers?)\b",
+    r"\b(?:sales?|revenue|results?|returns?|performance|conversions?|profit|roi|roas|orders?|"
+    r"leads?|traffic|clicks?|ctr|cvr|cpa|cpc|reach|impressions?|engagement)\b",
+    re.IGNORECASE,
+)
+PERFORMANCE_PROMISE = re.compile(
+    r"\b(?:promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)|pledge(?:s|d|ing)?)\b",
+    re.IGNORECASE,
+)
+PERFORMANCE_COMMITMENT = re.compile(
+    r"\b(?:commit(?:s|ted|ting)?|ensur(?:e|es|ed|ing))\b",
     re.IGNORECASE,
 )
 PERFORMANCE_CERTAINTY = re.compile(
-    r"\b(?:promis(?:e|es|ed|ing)|assur(?:e|es|ed|ing)|pledge(?:s|d|ing)?|"
-    r"commit(?:s|ted|ting)?|ensur(?:e|es|ed|ing)|certain(?:ly)?|sure(?:ly)?|"
-    r"always|inevitabl(?:e|y)|definitel(?:y)|every\s+time|no\s+matter\s+what)\b",
+    r"\b(?:certain(?:ly)?|sure(?:ly)?|always|inevitabl(?:e|y)|definitel(?:y)|bound|destined|"
+    r"every\s+time|no\s+matter\s+what|cannot\s+fail)\b",
     re.IGNORECASE,
 )
-PERFORMANCE_MULTIPLIER = re.compile(
-    r"\b(?:double[ds]?|doubling|triple[ds]?|tripling|twice|2x|3x)\b",
+PERFORMANCE_MODAL = re.compile(r"\b(?:will|shall)\b", re.IGNORECASE)
+PERFORMANCE_CHANGE = re.compile(
+    r"\b(?:double[ds]?|doubling|triple[ds]?|tripling|twice|2x|3x|increase[ds]?|increasing|"
+    r"grow(?:s|ing|n)?|improve[ds]?|improving|rise[sn]?|rising|fall(?:s|ing)?|drop(?:s|ped|ping)?|half)\b",
     re.IGNORECASE,
 )
-PERFORMANCE_CERTAIN_GROWTH = re.compile(
-    r"\b(?:will|shall)\b[^.!?\n]{0,80}\b(?:increase[ds]?|grow[sn]?|improve[ds]?|rise[sn]?|double[ds]?|triple[ds]?)\b",
+PERFORMANCE_IMPERATIVE = re.compile(
+    r"\b(?:double|triple|2x|3x)\s+(?:your\s+)?(?:sales?|revenue|results?|returns?|conversions?|profit|orders?|leads?|traffic|clicks?|reach|impressions?|engagement)\b|"
+    r"\b(?:twice|three\s+times)\s+as\s+many\s+(?:sales?|orders?|leads?|clicks?|conversions?)\b",
     re.IGNORECASE,
 )
 
@@ -152,7 +157,7 @@ def review_creative_claims(
                 "substantiation_ids": [item.evidence_id for item in substantiation],
             })
 
-        text = f"{creative.headline} {creative.message}"
+        text = f"{creative.headline}. {creative.message}"
         for matched in _find_high_risk_matches(text):
             rule_id, category = matched["rule_id"], matched["category"]
             if rule_id not in structured_rule_ids:
@@ -208,20 +213,32 @@ def _find_high_risk_matches(text: str) -> list[dict[str, str]]:
 def _match_performance_guarantee(text: str) -> dict[str, str] | None:
     direct_pattern = HIGH_RISK_RULES[0][2]
     direct = direct_pattern.search(text)
-    has_outcome = PERFORMANCE_OUTCOME.search(text)
-    structural = has_outcome and (
-        PERFORMANCE_CERTAINTY.search(text)
-        or PERFORMANCE_MULTIPLIER.search(text)
-        or PERFORMANCE_CERTAIN_GROWTH.search(text)
-    )
-    if not direct and not structural:
-        return None
-    matched_text = direct.group(0) if direct else text.strip()
-    return {
-        "rule_id": "CLAIM-PERFORMANCE-GUARANTEE",
-        "category": "performance_guarantee",
-        "matched_text": matched_text,
-    }
+    if direct:
+        return {
+            "rule_id": "CLAIM-PERFORMANCE-GUARANTEE",
+            "category": "performance_guarantee",
+            "matched_text": direct.group(0),
+        }
+    for sentence in (part.strip() for part in re.split(r"[.!?;\n]+", text) if part.strip()):
+        if not PERFORMANCE_OUTCOME.search(sentence):
+            continue
+        change = PERFORMANCE_CHANGE.search(sentence)
+        structural = (
+            PERFORMANCE_PROMISE.search(sentence)
+            or PERFORMANCE_IMPERATIVE.search(sentence)
+            or (change and (
+                PERFORMANCE_COMMITMENT.search(sentence)
+                or PERFORMANCE_CERTAINTY.search(sentence)
+                or PERFORMANCE_MODAL.search(sentence)
+            ))
+        )
+        if structural:
+            return {
+                "rule_id": "CLAIM-PERFORMANCE-GUARANTEE",
+                "category": "performance_guarantee",
+                "matched_text": sentence,
+            }
+    return None
 
 
 def _reason(action: str, substantiated: bool) -> str:
