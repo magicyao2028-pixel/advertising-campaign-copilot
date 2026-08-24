@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 - 2026-08-24
+
+- Added explicit minimum-sample checks of 1,000 impressions, 50 clicks and 10 conversions to each performance cell.
+- Prevented low-information cells from receiving `candidate_scale` even when objective-policy factors pass.
+- Added sample-quality details and an honest non-statistical boundary to recommendations and trial reports.
+- Added a low-information regression fixture, expanded the evidence index to eight claims, and retained human approval plus zero platform writes.
+
 ## 0.5.0 - 2026-08-20
 
 - Added governed replay for accepted creative-feedback records while excluding pending and rejected records.

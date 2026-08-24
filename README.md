@@ -10,7 +10,7 @@ Many small teams need a transparent workflow before they need a fully autonomous
 
 The business scenario is an internal AI-application exploration for Changsha Shiju Trading Co., Ltd. All names, campaign inputs, performance values, and outputs in the repository are synthetic.
 
-## What v0.5 demonstrates
+## What v0.6 demonstrates
 
 - structured campaign briefs and explicit KPI targets;
 - per-cell budget envelopes and one-variable experiment guidance;
@@ -22,10 +22,11 @@ The business scenario is an internal AI-application exploration for Changsha Shi
 - exact evidence binding for every releasable claim, headline, and message so edited or unregistered copy fails closed;
 - bounded recommendations: scale candidate, hold and test, or pause and review;
 - objective-specific policies with visible factors, weights, thresholds and scores;
+- explicit prototype minimum-sample checks for impressions, clicks and conversions; low-information cells cannot qualify for scaling;
 - explicit outcome semantics so lead policies cannot silently score purchase events;
 - mandatory human approval and zero platform writes;
 - governed replay of accepted creative feedback against an isolated campaign copy;
-- exclusion of pending feedback plus a seven-claim evidence index and clean offline trial;
+- exclusion of pending feedback plus an eight-claim evidence index and clean offline trial;
 - deterministic tests and a static public demo.
 
 ## Quick start
@@ -41,6 +42,8 @@ campaign-trial
 ```
 
 The package has no runtime dependencies and requires Python 3.10 or later.
+
+The minimum-sample gate is deliberately modest and explicit: 1,000 impressions, 50 clicks and 10 conversions. It is a screening assumption for this portfolio prototype, not a statistical-power, significance or causal-inference claim.
 
 ## Workflow
 

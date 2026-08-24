@@ -143,7 +143,31 @@
       "cpa": 90.0,
       "roas": 3.33,
       "target_cpa": 120.0,
-      "target_roas": 2.5
+      "target_roas": 2.5,
+      "sample_quality": {
+        "checks": [
+          {
+            "metric": "impressions",
+            "observed": 120000,
+            "minimum": 1000,
+            "passed": true
+          },
+          {
+            "metric": "clicks",
+            "observed": 4200,
+            "minimum": 50,
+            "passed": true
+          },
+          {
+            "metric": "conversions",
+            "observed": 100,
+            "minimum": 10,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "boundary": "Prototype minimum-sample assumptions are screening gates, not statistical power or significance claims."
+      }
     },
     {
       "cell_id": "CELL-VIDEO-B",
@@ -161,7 +185,31 @@
       "cpa": 200.0,
       "roas": 1.29,
       "target_cpa": 120.0,
-      "target_roas": 2.5
+      "target_roas": 2.5,
+      "sample_quality": {
+        "checks": [
+          {
+            "metric": "impressions",
+            "observed": 200000,
+            "minimum": 1000,
+            "passed": true
+          },
+          {
+            "metric": "clicks",
+            "observed": 3000,
+            "minimum": 50,
+            "passed": true
+          },
+          {
+            "metric": "conversions",
+            "observed": 35,
+            "minimum": 10,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "boundary": "Prototype minimum-sample assumptions are screening gates, not statistical power or significance claims."
+      }
     },
     {
       "cell_id": "CELL-SOCIAL-C",
@@ -179,7 +227,31 @@
       "cpa": null,
       "roas": 0.0,
       "target_cpa": 120.0,
-      "target_roas": 2.5
+      "target_roas": 2.5,
+      "sample_quality": {
+        "checks": [
+          {
+            "metric": "impressions",
+            "observed": 180000,
+            "minimum": 1000,
+            "passed": true
+          },
+          {
+            "metric": "clicks",
+            "observed": 2000,
+            "minimum": 50,
+            "passed": true
+          },
+          {
+            "metric": "conversions",
+            "observed": 0,
+            "minimum": 10,
+            "passed": false
+          }
+        ],
+        "passed": false,
+        "boundary": "Prototype minimum-sample assumptions are screening gates, not statistical power or significance claims."
+      }
     }
   ],
   "trend_review": {
@@ -264,6 +336,30 @@
           }
         ]
       },
+      "sample_quality": {
+        "checks": [
+          {
+            "metric": "impressions",
+            "observed": 120000,
+            "minimum": 1000,
+            "passed": true
+          },
+          {
+            "metric": "clicks",
+            "observed": 4200,
+            "minimum": 50,
+            "passed": true
+          },
+          {
+            "metric": "conversions",
+            "observed": 100,
+            "minimum": 10,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "boundary": "Prototype minimum-sample assumptions are screening gates, not statistical power or significance claims."
+      },
       "recommended_budget_change_pct": 15.0,
       "evidence_ids": [
         "PERF-2026-001"
@@ -299,6 +395,30 @@
           }
         ]
       },
+      "sample_quality": {
+        "checks": [
+          {
+            "metric": "impressions",
+            "observed": 200000,
+            "minimum": 1000,
+            "passed": true
+          },
+          {
+            "metric": "clicks",
+            "observed": 3000,
+            "minimum": 50,
+            "passed": true
+          },
+          {
+            "metric": "conversions",
+            "observed": 35,
+            "minimum": 10,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "boundary": "Prototype minimum-sample assumptions are screening gates, not statistical power or significance claims."
+      },
       "recommended_budget_change_pct": 0.0,
       "evidence_ids": [
         "PERF-2026-002"
@@ -333,6 +453,30 @@
             "passed": false
           }
         ]
+      },
+      "sample_quality": {
+        "checks": [
+          {
+            "metric": "impressions",
+            "observed": 180000,
+            "minimum": 1000,
+            "passed": true
+          },
+          {
+            "metric": "clicks",
+            "observed": 2000,
+            "minimum": 50,
+            "passed": true
+          },
+          {
+            "metric": "conversions",
+            "observed": 0,
+            "minimum": 10,
+            "passed": false
+          }
+        ],
+        "passed": false,
+        "boundary": "Prototype minimum-sample assumptions are screening gates, not statistical power or significance claims."
       },
       "recommended_budget_change_pct": 0.0,
       "evidence_ids": [

@@ -7,6 +7,9 @@ from .models import CampaignBrief, PerformanceCell, period_index
 from .objective_policies import get_objective_policy, score_cell
 
 
+MINIMUM_SAMPLE = {"impressions": 1000, "clicks": 50, "conversions": 10}
+
+
 class CampaignCopilot:
     """Builds a deterministic campaign review with bounded optimization advice."""
 
@@ -104,6 +107,14 @@ class CampaignCopilot:
             "roas": round(roas, 2),
             "target_cpa": campaign.target_cpa,
             "target_roas": campaign.target_roas,
+            "sample_quality": {
+                "checks": [
+                    {"metric": metric, "observed": getattr(cell, metric), "minimum": minimum, "passed": getattr(cell, metric) >= minimum}
+                    for metric, minimum in MINIMUM_SAMPLE.items()
+                ],
+                "passed": all(getattr(cell, metric) >= minimum for metric, minimum in MINIMUM_SAMPLE.items()),
+                "boundary": "Prototype minimum-sample assumptions are screening gates, not statistical power or significance claims.",
+            },
         }
 
     def _trend_review(self, campaign: CampaignBrief) -> dict[str, Any]:
@@ -189,17 +200,22 @@ class CampaignCopilot:
     def _recommendation(cell: dict[str, Any], campaign: CampaignBrief, policy: Any) -> dict[str, Any]:
         minimum_review_spend = campaign.total_budget * 0.10
         policy_score = score_cell(cell, policy)
+        sample_quality = cell["sample_quality"]
         if cell["conversions"] == 0 and cell["spend"] >= minimum_review_spend:
             action = "pause_and_review"
             reason = "No conversions after the minimum review-spend threshold."
             change = 0.0
-        elif policy_score["score"] >= policy_score["scale_score"]:
+        elif policy_score["score"] >= policy_score["scale_score"] and sample_quality["passed"]:
             action = "candidate_scale"
             reason = f"All weighted factors in {policy.policy_id} meet the declared thresholds."
             change = min(15.0, campaign.max_reallocation_pct)
         else:
             action = "hold_and_test"
-            reason = f"The cell does not meet every scale factor in {policy.policy_id}."
+            reason = (
+                "The cell meets policy factors but does not meet the minimum sample gate."
+                if policy_score["score"] >= policy_score["scale_score"] and not sample_quality["passed"]
+                else f"The cell does not meet every scale factor in {policy.policy_id}."
+            )
             change = 0.0
         return {
             "cell_id": cell["cell_id"],
@@ -208,6 +224,7 @@ class CampaignCopilot:
             "objective": campaign.objective,
             "objective_policy_id": policy.policy_id,
             "policy_score": policy_score,
+            "sample_quality": sample_quality,
             "recommended_budget_change_pct": change,
             "evidence_ids": [cell["source_id"]],
             "requires_human_approval": True,

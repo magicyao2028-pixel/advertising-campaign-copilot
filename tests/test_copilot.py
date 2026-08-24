@@ -95,6 +95,15 @@ class CampaignCopilotTests(unittest.TestCase):
         self.assertEqual(action["objective_policy_id"], "OBJ-REV-001")
         self.assertEqual(action["policy_score"]["score"], 100)
 
+    def test_low_information_cell_cannot_qualify_for_scaling(self):
+        payload = sample_payload()
+        payload["performance"][0].update({"spend": 100, "impressions": 100, "clicks": 50, "conversions": 10, "revenue": 300})
+        result = CampaignCopilot().review(CampaignBrief.from_mapping(payload))
+        recommendation = result["optimization_recommendations"][0]
+        self.assertEqual(recommendation["action"], "hold_and_test")
+        self.assertFalse(recommendation["sample_quality"]["passed"])
+        self.assertIn("minimum sample", recommendation["reason"])
+
     def test_revenue_policy_uses_roas_and_cpa(self):
         payload = sample_payload()
         payload["target_roas"] = 99

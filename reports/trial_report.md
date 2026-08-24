@@ -6,6 +6,7 @@
 - Baseline: `ready_for_human_review`
 - Feedback cases blocked as expected: 2/2
 - Pending feedback excluded: 1
+- Low-information scale blocked: yes
 
 ## Pilot boundary
 

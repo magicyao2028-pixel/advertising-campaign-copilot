@@ -8,7 +8,7 @@ from typing import Any
 
 from .copilot import CampaignCopilot
 from .creative_feedback import replay_creative_feedback
-from .models import load_campaign
+from .models import CampaignBrief, load_campaign
 
 
 COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
@@ -82,16 +82,23 @@ def validate_feedback(root: Path, payload: dict[str, Any]) -> dict[str, Any]:
 def run_trial(root: Path) -> dict[str, Any]:
     root = root.resolve()
     baseline = CampaignCopilot().review(load_campaign(root / "data/sample_campaign.json"))
+    low_information_payload = json.loads((root / "data/sample_campaign.json").read_text(encoding="utf-8"))
+    low_information_payload["performance"][0].update({"spend": 100, "impressions": 100, "clicks": 50, "conversions": 10, "revenue": 300})
+    low_information = CampaignCopilot().review(CampaignBrief.from_mapping(low_information_payload))
+    low_information_scale_blocked = (
+        low_information["optimization_recommendations"][0]["action"] == "hold_and_test"
+        and not low_information["optimization_recommendations"][0]["sample_quality"]["passed"]
+    )
     replay = replay_creative_feedback(root / "data/sample_campaign.json", root / "data/creative_feedback.json")
     evidence = validate_evidence_index(root, load_json_object(root / "evidence/evidence_index.json"))
     external = validate_external_intake(load_json_object(root / "evidence/external_intake.json"))
     feedback = validate_feedback(root, load_json_object(root / "evidence/feedback_case.json"))
     replay_safe = all(item["actual"]["release_blocked"] and item["actual"]["optimization_recommendations"] == 0 and item["actual"]["platform_write_executed"] is False for item in replay["replayed"])
-    core_passed = baseline["status"] == "ready_for_human_review" and baseline["governance"]["platform_write_executed"] is False and replay["summary"]["passed"] == 2 and replay_safe
+    core_passed = baseline["status"] == "ready_for_human_review" and baseline["governance"]["platform_write_executed"] is False and replay["summary"]["passed"] == 2 and replay_safe and low_information_scale_blocked
     return {
         "schema_version": "1.0", "trial_id": "TRIAL-CAMPAIGN-001", "source_data": "synthetic",
         "overall_passed": core_passed and feedback["passed"] and all(item["passed"] for item in evidence + external),
-        "core_flow": {"passed": core_passed, "baseline_status": baseline["status"], "feedback_cases_passed": replay["summary"]["passed"], "pending_feedback_excluded": replay["summary"]["excluded"], "blocked_cases_emitted_optimization": False, "platform_writes_executed": 0},
+        "core_flow": {"passed": core_passed, "baseline_status": baseline["status"], "feedback_cases_passed": replay["summary"]["passed"], "pending_feedback_excluded": replay["summary"]["excluded"], "blocked_cases_emitted_optimization": False, "low_information_scale_blocked": low_information_scale_blocked, "platform_writes_executed": 0},
         "feedback_regression": feedback, "external_intake": external, "evidence_index": evidence,
         "boundaries": load_json_object(root / "evidence/evidence_index.json")["boundaries"],
     }
@@ -105,7 +112,7 @@ def write_trial_report(root: Path, json_path: Path, markdown_path: Path) -> dict
     markdown_path.write_text("\n".join([
         "# Campaign Copilot Trial Readiness", "", "> Synthetic offline verification; no ad, budget or platform write is executed.", "",
         f"- Overall: **{'PASS' if report['overall_passed'] else 'FAIL'}**", f"- Baseline: `{report['core_flow']['baseline_status']}`",
-        f"- Feedback cases blocked as expected: {report['core_flow']['feedback_cases_passed']}/2", f"- Pending feedback excluded: {report['core_flow']['pending_feedback_excluded']}", "",
+        f"- Feedback cases blocked as expected: {report['core_flow']['feedback_cases_passed']}/2", f"- Pending feedback excluded: {report['core_flow']['pending_feedback_excluded']}", f"- Low-information scale blocked: {'yes' if report['core_flow']['low_information_scale_blocked'] else 'no'}", "",
         "## Pilot boundary", "", *[f"- {item}" for item in report["boundaries"]], "",
     ]), encoding="utf-8")
     return report

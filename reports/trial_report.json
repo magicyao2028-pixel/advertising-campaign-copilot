@@ -9,6 +9,7 @@
     "feedback_cases_passed": 2,
     "pending_feedback_excluded": 1,
     "blocked_cases_emitted_optimization": false,
+    "low_information_scale_blocked": true,
     "platform_writes_executed": 0
   },
   "feedback_regression": {
@@ -80,6 +81,15 @@
       "artifact_paths": [
         "docs/SECURITY.md",
         "docs/HANDOFF.md"
+      ],
+      "passed": true
+    },
+    {
+      "claim_id": "CAMPAIGN-SAMPLE-001",
+      "artifact_paths": [
+        "src/campaign_copilot/copilot.py",
+        "tests/test_copilot.py",
+        "reports/trial_report.json"
       ],
       "passed": true
     }

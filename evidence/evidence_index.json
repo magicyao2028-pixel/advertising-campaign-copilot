@@ -6,7 +6,8 @@
     {"claim_id": "CAMPAIGN-FAIL-001", "statement": "Blocked feedback cases emit no optimization recommendation or platform write.", "artifacts": [{"kind": "tests", "path": "tests/test_creative_feedback.py"}]},
     {"claim_id": "CAMPAIGN-OSS-001", "statement": "Two validation projects were screened without forcing unnecessary dependencies.", "artifacts": [{"kind": "screening", "path": "evidence/external_intake.json"}]},
     {"claim_id": "CAMPAIGN-FEEDBACK-001", "statement": "Synthetic creative feedback links classification, decision, replay and regression evidence.", "artifacts": [{"kind": "feedback", "path": "evidence/feedback_case.json"}, {"kind": "fixture", "path": "data/creative_feedback.json"}]},
-    {"claim_id": "CAMPAIGN-LIMIT-001", "statement": "Policy currency, synthetic-data and human-authority limitations remain explicit.", "artifacts": [{"kind": "security", "path": "docs/SECURITY.md"}, {"kind": "handoff", "path": "docs/HANDOFF.md"}]}
+    {"claim_id": "CAMPAIGN-LIMIT-001", "statement": "Policy currency, synthetic-data and human-authority limitations remain explicit.", "artifacts": [{"kind": "security", "path": "docs/SECURITY.md"}, {"kind": "handoff", "path": "docs/HANDOFF.md"}]},
+    {"claim_id": "CAMPAIGN-SAMPLE-001", "statement": "Minimum-sample assumptions are exposed per performance cell and prevent low-information cells from qualifying for scale recommendations.", "artifacts": [{"kind": "implementation", "path": "src/campaign_copilot/copilot.py"}, {"kind": "tests", "path": "tests/test_copilot.py"}, {"kind": "trial", "path": "reports/trial_report.json"}]}
   ],
   "boundaries": [
     "Policy rules are a screening aid and require current platform, product and jurisdiction review.",
