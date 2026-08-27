@@ -26,6 +26,7 @@ The business scenario is an internal AI-application exploration for Changsha Shi
 - explicit outcome semantics so lead policies cannot silently score purchase events;
 - mandatory human approval and zero platform writes;
 - governed replay of accepted creative feedback against an isolated campaign copy;
+- prioritizes recommendations in a human-review experiment queue without changing budgets or launching experiments;
 - exclusion of pending feedback plus an eight-claim evidence index and clean offline trial;
 - deterministic tests and a static public demo.
 

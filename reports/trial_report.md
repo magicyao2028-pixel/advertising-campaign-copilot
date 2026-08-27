@@ -7,6 +7,7 @@
 - Feedback cases blocked as expected: 2/2
 - Pending feedback excluded: 1
 - Low-information scale blocked: yes
+- Experiment queue items: 3
 
 ## Pilot boundary
 

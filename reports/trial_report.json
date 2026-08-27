@@ -4,7 +4,41 @@
   "source_data": "synthetic",
   "overall_passed": true,
   "core_flow": {
-    "passed": true,
+    "passed": [
+      {
+        "cell_id": "CELL-SOCIAL-C",
+        "priority": "critical",
+        "action": "pause_and_review",
+        "next_action": "escalate_to_campaign_owner",
+        "evidence_ids": [
+          "PERF-2026-003"
+        ],
+        "requires_human_approval": true,
+        "executed": false
+      },
+      {
+        "cell_id": "CELL-VIDEO-B",
+        "priority": "high",
+        "action": "hold_and_test",
+        "next_action": "collect_minimum_sample_before_scale_decision",
+        "evidence_ids": [
+          "PERF-2026-002"
+        ],
+        "requires_human_approval": true,
+        "executed": false
+      },
+      {
+        "cell_id": "CELL-SEARCH-A",
+        "priority": "normal",
+        "action": "candidate_scale",
+        "next_action": "obtain_human_approval_and_monitor_one_variable",
+        "evidence_ids": [
+          "PERF-2026-001"
+        ],
+        "requires_human_approval": true,
+        "executed": false
+      }
+    ],
     "baseline_status": "ready_for_human_review",
     "feedback_cases_passed": 2,
     "pending_feedback_excluded": 1,
@@ -29,6 +63,50 @@
       "passed": true
     }
   ],
+  "experiment_queue": {
+    "schema_version": "1.0",
+    "queue_type": "campaign experiment review queue",
+    "campaign_id": "SYNTH-CAMPAIGN-001",
+    "items": [
+      {
+        "cell_id": "CELL-SOCIAL-C",
+        "priority": "critical",
+        "action": "pause_and_review",
+        "next_action": "escalate_to_campaign_owner",
+        "evidence_ids": [
+          "PERF-2026-003"
+        ],
+        "requires_human_approval": true,
+        "executed": false
+      },
+      {
+        "cell_id": "CELL-VIDEO-B",
+        "priority": "high",
+        "action": "hold_and_test",
+        "next_action": "collect_minimum_sample_before_scale_decision",
+        "evidence_ids": [
+          "PERF-2026-002"
+        ],
+        "requires_human_approval": true,
+        "executed": false
+      },
+      {
+        "cell_id": "CELL-SEARCH-A",
+        "priority": "normal",
+        "action": "candidate_scale",
+        "next_action": "obtain_human_approval_and_monitor_one_variable",
+        "evidence_ids": [
+          "PERF-2026-001"
+        ],
+        "requires_human_approval": true,
+        "executed": false
+      }
+    ],
+    "platform_writes_executed": 0,
+    "external_actions_executed": 0,
+    "human_approval_required": true,
+    "boundary": "This queue prioritizes review work only; it does not change budgets, launch experiments or publish creatives."
+  },
   "evidence_index": [
     {
       "claim_id": "CAMPAIGN-BUSINESS-001",
@@ -89,6 +167,16 @@
       "artifact_paths": [
         "src/campaign_copilot/copilot.py",
         "tests/test_copilot.py",
+        "reports/trial_report.json"
+      ],
+      "passed": true
+    },
+    {
+      "claim_id": "CAMPAIGN-QUEUE-001",
+      "artifact_paths": [
+        "src/campaign_copilot/experiment_queue.py",
+        "src/campaign_copilot/trial.py",
+        "tests/test_trial.py",
         "reports/trial_report.json"
       ],
       "passed": true

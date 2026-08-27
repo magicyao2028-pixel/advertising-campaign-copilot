@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 - 2026-08-27
+
+- added a prioritized experiment-review queue derived from bounded recommendations;
+- preserved explicit human approval, zero platform writes and no automatic experiment launch;
+- added trial and regression evidence for queue ordering and safety boundaries.
+
 ## 0.6.0 - 2026-08-24
 
 - Added explicit minimum-sample checks of 1,000 impressions, 50 clicks and 10 conversions to each performance cell.

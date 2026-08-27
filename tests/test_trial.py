@@ -4,6 +4,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from campaign_copilot.trial import load_json_object, run_trial, validate_external_intake, validate_feedback, write_trial_report
+from campaign_copilot.experiment_queue import build_experiment_queue
 
 
 ROOT = Path(__file__).parents[1]
@@ -37,6 +38,20 @@ class TrialTests(unittest.TestCase):
             self.assertEqual(first, second)
             self.assertEqual(first_bytes, (json_path.read_bytes(), md_path.read_bytes()))
             self.assertTrue(json.loads(json_path.read_text())["overall_passed"])
+
+    def test_experiment_queue_requires_human_approval_and_no_writes(self):
+        review = run_trial(ROOT)
+        queue = build_experiment_queue({
+            "campaign_id": "QUEUE-TEST",
+            "optimization_recommendations": [
+                {"cell_id": "C-2", "action": "candidate_scale", "evidence_ids": ["S-2"]},
+                {"cell_id": "C-1", "action": "pause_and_review", "evidence_ids": ["S-1"]},
+            ],
+        })
+        self.assertEqual(queue["items"][0]["priority"], "critical")
+        self.assertTrue(queue["human_approval_required"])
+        self.assertEqual(queue["platform_writes_executed"], 0)
+        self.assertTrue(review["experiment_queue"]["items"])
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@ from typing import Any
 
 from .copilot import CampaignCopilot
 from .creative_feedback import replay_creative_feedback
+from .experiment_queue import build_experiment_queue
 from .models import CampaignBrief, load_campaign
 
 
@@ -82,6 +83,7 @@ def validate_feedback(root: Path, payload: dict[str, Any]) -> dict[str, Any]:
 def run_trial(root: Path) -> dict[str, Any]:
     root = root.resolve()
     baseline = CampaignCopilot().review(load_campaign(root / "data/sample_campaign.json"))
+    queue = build_experiment_queue(baseline)
     low_information_payload = json.loads((root / "data/sample_campaign.json").read_text(encoding="utf-8"))
     low_information_payload["performance"][0].update({"spend": 100, "impressions": 100, "clicks": 50, "conversions": 10, "revenue": 300})
     low_information = CampaignCopilot().review(CampaignBrief.from_mapping(low_information_payload))
@@ -94,12 +96,12 @@ def run_trial(root: Path) -> dict[str, Any]:
     external = validate_external_intake(load_json_object(root / "evidence/external_intake.json"))
     feedback = validate_feedback(root, load_json_object(root / "evidence/feedback_case.json"))
     replay_safe = all(item["actual"]["release_blocked"] and item["actual"]["optimization_recommendations"] == 0 and item["actual"]["platform_write_executed"] is False for item in replay["replayed"])
-    core_passed = baseline["status"] == "ready_for_human_review" and baseline["governance"]["platform_write_executed"] is False and replay["summary"]["passed"] == 2 and replay_safe and low_information_scale_blocked
+    core_passed = baseline["status"] == "ready_for_human_review" and baseline["governance"]["platform_write_executed"] is False and replay["summary"]["passed"] == 2 and replay_safe and low_information_scale_blocked and queue["platform_writes_executed"] == 0 and queue["items"]
     return {
         "schema_version": "1.0", "trial_id": "TRIAL-CAMPAIGN-001", "source_data": "synthetic",
         "overall_passed": core_passed and feedback["passed"] and all(item["passed"] for item in evidence + external),
         "core_flow": {"passed": core_passed, "baseline_status": baseline["status"], "feedback_cases_passed": replay["summary"]["passed"], "pending_feedback_excluded": replay["summary"]["excluded"], "blocked_cases_emitted_optimization": False, "low_information_scale_blocked": low_information_scale_blocked, "platform_writes_executed": 0},
-        "feedback_regression": feedback, "external_intake": external, "evidence_index": evidence,
+        "feedback_regression": feedback, "external_intake": external, "experiment_queue": queue, "evidence_index": evidence,
         "boundaries": load_json_object(root / "evidence/evidence_index.json")["boundaries"],
     }
 
@@ -112,7 +114,7 @@ def write_trial_report(root: Path, json_path: Path, markdown_path: Path) -> dict
     markdown_path.write_text("\n".join([
         "# Campaign Copilot Trial Readiness", "", "> Synthetic offline verification; no ad, budget or platform write is executed.", "",
         f"- Overall: **{'PASS' if report['overall_passed'] else 'FAIL'}**", f"- Baseline: `{report['core_flow']['baseline_status']}`",
-        f"- Feedback cases blocked as expected: {report['core_flow']['feedback_cases_passed']}/2", f"- Pending feedback excluded: {report['core_flow']['pending_feedback_excluded']}", f"- Low-information scale blocked: {'yes' if report['core_flow']['low_information_scale_blocked'] else 'no'}", "",
+        f"- Feedback cases blocked as expected: {report['core_flow']['feedback_cases_passed']}/2", f"- Pending feedback excluded: {report['core_flow']['pending_feedback_excluded']}", f"- Low-information scale blocked: {'yes' if report['core_flow']['low_information_scale_blocked'] else 'no'}", f"- Experiment queue items: {len(report['experiment_queue']['items'])}", "",
         "## Pilot boundary", "", *[f"- {item}" for item in report["boundaries"]], "",
     ]), encoding="utf-8")
     return report
