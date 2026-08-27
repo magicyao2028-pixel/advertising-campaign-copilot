@@ -2,7 +2,7 @@
 
 ## Current state
 
-- Release: v0.7.0
+- Release: v0.6.0
 - Maintenance rounds completed: 6/10
 - M4: governed creative-feedback replay, regression evidence, reviewer trial, and seven-claim evidence index
 - M5: explicit minimum-sample checks for impressions, clicks and conversions; low-information cells are held for testing even when policy factors would otherwise qualify them for scale; eight-claim evidence index and trial regression.
