@@ -2,10 +2,11 @@
 
 ## Current state
 
-- Release: v0.6.0
-- Maintenance rounds completed: 5/10
+- Release: v0.7.0
+- Maintenance rounds completed: 6/10
 - M4: governed creative-feedback replay, regression evidence, reviewer trial, and seven-claim evidence index
 - M5: explicit minimum-sample checks for impressions, clicks and conversions; low-information cells are held for testing even when policy factors would otherwise qualify them for scale; eight-claim evidence index and trial regression.
+- M6: deterministic priority-ordered experiment review queue for pause, hold-and-test and candidate-scale outcomes; the queue is advisory and performs no platform write.
 - Runtime: offline Python 3.10+, no runtime dependencies
 - Data: synthetic only
 - External writes: none
@@ -44,9 +45,9 @@ python -m campaign_copilot.trial_cli
 
 ## Next authorized maintenance round
 
-M6: add one bounded experiment-quality or review-report improvement. Preserve claim policy references, feedback provenance, objective policies, period comparability, minimum-sample gate, approval, and execution boundaries.
+M7: add one bounded experiment-quality or review-report improvement. Preserve claim policy references, feedback provenance, objective policies, period comparability, minimum-sample gate, approval, and execution boundaries.
 
-## Completion gate for M5
+## Completion gate for M6
 
 - the next quality assumption is explicit and tested;
 - low-information cells remain unable to qualify for scaling;
