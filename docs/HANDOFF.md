@@ -48,8 +48,8 @@ python -m campaign_copilot.trial_cli
 
 M8: add one bounded experiment-quality or review-history improvement. Preserve claim policy references, feedback provenance, objective policies, period comparability, minimum-sample gate, approval, and execution boundaries.
 
-## Completion gate for M6
+## Completion gate for M7
 
-- the next quality assumption is explicit and tested;
+- each exported checklist has explicit completion criteria and is tested;
 - low-information cells remain unable to qualify for scaling;
 - old and new tests pass and the maintenance count advances only after publication is verified.
