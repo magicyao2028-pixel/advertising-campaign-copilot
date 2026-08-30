@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0 - 2026-08-30
+
+- added a deterministic experiment-review export with action-specific completion criteria;
+- preserved human approval, minimum-sample and zero-platform-write boundaries;
+- added trial and regression coverage without launching or mutating campaigns.
+
 ## 0.6.0 - 2026-08-27
 
 - added a prioritized experiment-review queue derived from bounded recommendations;

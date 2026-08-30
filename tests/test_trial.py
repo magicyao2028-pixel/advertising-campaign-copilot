@@ -5,6 +5,7 @@ from tempfile import TemporaryDirectory
 
 from campaign_copilot.trial import load_json_object, run_trial, validate_external_intake, validate_feedback, write_trial_report
 from campaign_copilot.experiment_queue import build_experiment_queue
+from campaign_copilot.review_export import build_experiment_review_export
 
 
 ROOT = Path(__file__).parents[1]
@@ -16,6 +17,8 @@ class TrialTests(unittest.TestCase):
         self.assertTrue(report["overall_passed"])
         self.assertEqual(report["core_flow"]["feedback_cases_passed"], 2)
         self.assertEqual(report["core_flow"]["platform_writes_executed"], 0)
+        self.assertEqual(report["experiment_review_export"]["item_count"], len(report["experiment_queue"]["items"]))
+        self.assertFalse(report["experiment_review_export"]["approval_applied"])
 
     def test_external_intake_requires_full_sha(self):
         payload = load_json_object(ROOT / "evidence/external_intake.json")
@@ -52,6 +55,15 @@ class TrialTests(unittest.TestCase):
         self.assertTrue(queue["human_approval_required"])
         self.assertEqual(queue["platform_writes_executed"], 0)
         self.assertTrue(review["experiment_queue"]["items"])
+
+    def test_review_export_preserves_queue_boundary(self):
+        review = {"campaign_id": "QUEUE-TEST", "optimization_recommendations": [{"cell_id": "C-1", "action": "hold_and_test", "evidence_ids": ["S-1"]}]}
+        queue = build_experiment_queue(review)
+        export = build_experiment_review_export(review, queue)
+        self.assertEqual(export["item_count"], 1)
+        self.assertEqual(export["items"][0]["status"], "pending")
+        self.assertFalse(export["approval_applied"])
+        self.assertEqual(export["platform_writes_executed"], 0)
 
 
 if __name__ == "__main__":

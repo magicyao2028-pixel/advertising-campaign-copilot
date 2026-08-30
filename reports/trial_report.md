@@ -8,6 +8,7 @@
 - Pending feedback excluded: 1
 - Low-information scale blocked: yes
 - Experiment queue items: 3
+- Review export approvals applied: False
 
 ## Pilot boundary
 
