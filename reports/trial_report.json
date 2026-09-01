@@ -121,6 +121,25 @@
     "approval_applied": false,
     "boundary": "This export makes experiment-review completion criteria visible; it does not change budgets, launch experiments or publish creatives."
   },
+  "review_history": {
+    "schema_version": "1.0",
+    "entry_count": 3,
+    "status_counts": {
+      "accepted": 1,
+      "deferred": 1,
+      "rejected": 1
+    },
+    "action_counts": {
+      "candidate_scale": 1,
+      "hold_and_test": 1,
+      "pause_and_review": 1
+    },
+    "latest_reviewed_on": "2026-08-02",
+    "approval_applied": false,
+    "platform_writes_executed": 0,
+    "external_actions_executed": 0,
+    "boundary": "Review history records synthetic human-review outcomes for learning; it does not change budgets, launch experiments or publish creatives."
+  },
   "evidence_index": [
     {
       "claim_id": "CAMPAIGN-BUSINESS-001",
@@ -200,6 +219,16 @@
       "artifact_paths": [
         "src/campaign_copilot/review_export.py",
         "tests/test_trial.py",
+        "reports/trial_report.json"
+      ],
+      "passed": true
+    },
+    {
+      "claim_id": "CAMPAIGN-REVIEW-HISTORY-001",
+      "artifact_paths": [
+        "src/campaign_copilot/review_history.py",
+        "data/review_history.json",
+        "tests/test_review_history.py",
         "reports/trial_report.json"
       ],
       "passed": true

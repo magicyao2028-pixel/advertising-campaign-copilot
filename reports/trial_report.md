@@ -9,6 +9,7 @@
 - Low-information scale blocked: yes
 - Experiment queue items: 3
 - Review export approvals applied: False
+- Review-history entries summarized: 3
 
 ## Pilot boundary
 

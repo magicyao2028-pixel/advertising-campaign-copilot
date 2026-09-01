@@ -19,6 +19,8 @@ class TrialTests(unittest.TestCase):
         self.assertEqual(report["core_flow"]["platform_writes_executed"], 0)
         self.assertEqual(report["experiment_review_export"]["item_count"], len(report["experiment_queue"]["items"]))
         self.assertFalse(report["experiment_review_export"]["approval_applied"])
+        self.assertEqual(report["review_history"]["entry_count"], 3)
+        self.assertEqual(report["review_history"]["platform_writes_executed"], 0)
 
     def test_external_intake_requires_full_sha(self):
         payload = load_json_object(ROOT / "evidence/external_intake.json")

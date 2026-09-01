@@ -1,0 +1,32 @@
+[
+  {
+    "review_id": "REV-SYNTH-001",
+    "campaign_id": "SYNTH-CAMPAIGN-001",
+    "cell_id": "CELL-SOCIAL-C",
+    "reviewed_on": "2026-07-31",
+    "action": "pause_and_review",
+    "status": "accepted",
+    "note": "Synthetic reviewer accepted the pause rationale and requested a claim-safety check.",
+    "approval_applied": false
+  },
+  {
+    "review_id": "REV-SYNTH-002",
+    "campaign_id": "SYNTH-CAMPAIGN-001",
+    "cell_id": "CELL-VIDEO-B",
+    "reviewed_on": "2026-08-01",
+    "action": "hold_and_test",
+    "status": "deferred",
+    "note": "Synthetic reviewer deferred scale until the minimum sample is met.",
+    "approval_applied": false
+  },
+  {
+    "review_id": "REV-SYNTH-003",
+    "campaign_id": "SYNTH-CAMPAIGN-001",
+    "cell_id": "CELL-SEARCH-A",
+    "reviewed_on": "2026-08-02",
+    "action": "candidate_scale",
+    "status": "rejected",
+    "note": "Synthetic reviewer rejected immediate scale pending a one-variable monitoring plan.",
+    "approval_applied": false
+  }
+]

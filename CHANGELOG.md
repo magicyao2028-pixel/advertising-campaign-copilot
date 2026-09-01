@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 - 2026-09-01
+
+- added a chronological, cell-linked synthetic review-history summary;
+- preserved unapplied approvals and zero platform writes while making reviewer feedback auditable;
+- added deterministic validation and trial evidence for the review-history boundary.
+
 ## 0.7.0 - 2026-08-30
 
 - added a deterministic experiment-review export with action-specific completion criteria;
