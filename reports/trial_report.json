@@ -91,18 +91,6 @@
         "executed": false
       },
       {
-        "cell_id": "CELL-SEARCH-A",
-        "priority": "normal",
-        "action": "candidate_scale",
-        "status": "pending",
-        "completion_criteria": "human approval is recorded and one-variable monitoring is scheduled",
-        "evidence_ids": [
-          "PERF-2026-001"
-        ],
-        "requires_human_approval": true,
-        "executed": false
-      },
-      {
         "cell_id": "CELL-VIDEO-B",
         "priority": "high",
         "action": "hold_and_test",
@@ -110,6 +98,18 @@
         "completion_criteria": "minimum sample thresholds are met and one controlled variable is selected",
         "evidence_ids": [
           "PERF-2026-002"
+        ],
+        "requires_human_approval": true,
+        "executed": false
+      },
+      {
+        "cell_id": "CELL-SEARCH-A",
+        "priority": "normal",
+        "action": "candidate_scale",
+        "status": "pending",
+        "completion_criteria": "human approval is recorded and one-variable monitoring is scheduled",
+        "evidence_ids": [
+          "PERF-2026-001"
         ],
         "requires_human_approval": true,
         "executed": false

@@ -67,6 +67,18 @@ class TrialTests(unittest.TestCase):
         self.assertFalse(export["approval_applied"])
         self.assertEqual(export["platform_writes_executed"], 0)
 
+    def test_review_export_orders_human_priority(self):
+        review = {
+            "campaign_id": "QUEUE-ORDER",
+            "optimization_recommendations": [
+                {"cell_id": "CELL-N", "action": "candidate_scale", "evidence_ids": []},
+                {"cell_id": "CELL-H", "action": "hold_and_test", "evidence_ids": []},
+                {"cell_id": "CELL-C", "action": "pause_and_review", "evidence_ids": []},
+            ],
+        }
+        export = build_experiment_review_export(review, build_experiment_queue(review))
+        self.assertEqual([item["priority"] for item in export["items"]], ["critical", "high", "normal"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -8,6 +8,7 @@ _CHECKLISTS = {
     "hold_and_test": ("pending", "minimum sample thresholds are met and one controlled variable is selected"),
     "candidate_scale": ("pending", "human approval is recorded and one-variable monitoring is scheduled"),
 }
+_PRIORITY = {"critical": 0, "high": 1, "normal": 2}
 
 
 def build_experiment_review_export(review: dict[str, Any], queue: dict[str, Any]) -> dict[str, Any]:
@@ -35,7 +36,7 @@ def build_experiment_review_export(review: dict[str, Any], queue: dict[str, Any]
                 "executed": False,
             }
         )
-    items.sort(key=lambda row: (row["priority"] != "critical", str(row["cell_id"])))
+    items.sort(key=lambda row: (_PRIORITY.get(str(row["priority"]), 99), str(row["cell_id"])))
     return {
         "schema_version": "1.0",
         "export_version": "0.7",
