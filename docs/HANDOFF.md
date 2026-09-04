@@ -2,13 +2,14 @@
 
 ## Current state
 
-- Release: v0.8.0
-- Maintenance rounds completed: 8/10
+- Release: v1.0.0
+- Maintenance rounds completed: 9/10
 - M4: governed creative-feedback replay, regression evidence, reviewer trial, and seven-claim evidence index
 - M5: explicit minimum-sample checks for impressions, clicks and conversions; low-information cells are held for testing even when policy factors would otherwise qualify them for scale; eight-claim evidence index and trial regression.
 - M6: deterministic priority-ordered experiment review queue for pause, hold-and-test and candidate-scale outcomes; the queue is advisory and performs no platform write.
 - M7: bounded experiment-review export with action completion criteria; approvals remain unapplied and the export performs no platform write.
 - M8: chronological, cell-linked synthetic review-history summary; reviewer outcomes remain advisory and perform no platform write.
+- M9: accepted-only synthetic reviewer-feedback replay references current review events, excludes pending/rejected records and keeps approvals, campaign state and platform writes disabled.
 - Runtime: offline Python 3.10+, no runtime dependencies
 - Data: synthetic only
 - External writes: none
@@ -47,7 +48,7 @@ python -m campaign_copilot.trial_cli
 
 ## Next authorized maintenance round
 
-M9: add one bounded experiment-quality or review-history improvement. Preserve claim policy references, feedback provenance, objective policies, period comparability, minimum-sample gate, approval, and execution boundaries.
+M10: add one bounded replay-result reconciliation or stale-review visibility improvement. Preserve claim policy references, feedback provenance, objective policies, period comparability, minimum-sample gate, approval, and execution boundaries.
 
 ## Completion gate for M8
 

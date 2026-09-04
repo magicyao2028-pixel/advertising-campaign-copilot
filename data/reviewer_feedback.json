@@ -1,0 +1,4 @@
+[
+  {"feedback_id": "CAMPAIGN-FB-001", "review_id": "REV-SYNTH-001", "recorded_on": "2026-08-03", "classification": "usability", "status": "accepted", "summary": "Queue rows should retain the reviewed cell and bounded action for owner follow-up.", "applied": false},
+  {"feedback_id": "CAMPAIGN-FB-002", "review_id": "REV-SYNTH-002", "recorded_on": "2026-08-04", "classification": "requirement", "status": "pending", "summary": "Consider a future closure filter after campaign owner approval exists.", "applied": false}
+]

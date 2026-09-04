@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0 - 2026-09-04
+
+- added accepted-only synthetic reviewer-feedback replay against experiment review history;
+- excluded pending/rejected records and kept approvals, campaign state and platform writes disabled;
+- added chronological/reference validation, regression tests and trial evidence.
+
 ## 0.8.0 - 2026-09-01
 
 - added a chronological, cell-linked synthetic review-history summary;
