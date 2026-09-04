@@ -17,6 +17,36 @@
     "source_type": "synthetic",
     "passed": true
   },
+  "reviewer_feedback_replay": {
+    "schema_version": "1.0",
+    "record_count": 2,
+    "status_counts": {
+      "accepted": 1,
+      "pending": 1
+    },
+    "replayed_count": 1,
+    "excluded_count": 1,
+    "replayed": [
+      {
+        "feedback_id": "CAMPAIGN-FB-001",
+        "review_id": "REV-SYNTH-001",
+        "status": "accepted",
+        "passed": true
+      }
+    ],
+    "excluded": [
+      {
+        "feedback_id": "CAMPAIGN-FB-002",
+        "review_id": "REV-SYNTH-002",
+        "status": "pending",
+        "passed": true
+      }
+    ],
+    "approval_applied": false,
+    "campaign_state_changed": false,
+    "platform_writes_executed": 0,
+    "boundary": "Only accepted synthetic feedback is replayed as advisory regression metadata; no approval is applied, campaign state changes or platform writes occur."
+  },
   "external_intake": [
     {
       "repository": "https://github.com/pydantic/pydantic",
@@ -229,6 +259,16 @@
         "src/campaign_copilot/review_history.py",
         "data/review_history.json",
         "tests/test_review_history.py",
+        "reports/trial_report.json"
+      ],
+      "passed": true
+    },
+    {
+      "claim_id": "CAMPAIGN-FEEDBACK-REPLAY-001",
+      "artifact_paths": [
+        "src/campaign_copilot/reviewer_feedback_replay.py",
+        "data/reviewer_feedback.json",
+        "tests/test_reviewer_feedback_replay.py",
         "reports/trial_report.json"
       ],
       "passed": true
