@@ -7,6 +7,8 @@
 - Feedback cases blocked as expected: 2/2
 - Pending feedback excluded: 1
 - Reviewer feedback replay: 1 accepted, 1 excluded
+- Feedback reconciled to current reviews: 1
+- Stale deferred reviews surfaced: 1
 - Low-information scale blocked: yes
 - Experiment queue items: 3
 - Review export approvals applied: False

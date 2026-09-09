@@ -10,6 +10,7 @@
     "pending_feedback_excluded": 1,
     "blocked_cases_emitted_optimization": false,
     "low_information_scale_blocked": true,
+    "evidence_claims": 13,
     "platform_writes_executed": 0
   },
   "feedback_regression": {
@@ -46,6 +47,38 @@
     "campaign_state_changed": false,
     "platform_writes_executed": 0,
     "boundary": "Only accepted synthetic feedback is replayed as advisory regression metadata; no approval is applied, campaign state changes or platform writes occur."
+  },
+  "review_reconciliation": {
+    "schema_version": "1.0",
+    "as_of_date": "2026-09-09",
+    "stale_after_days": 30,
+    "reconciled_count": 1,
+    "stale_review_count": 1,
+    "reconciled_feedback": [
+      {
+        "feedback_id": "CAMPAIGN-FB-001",
+        "review_id": "REV-SYNTH-001",
+        "cell_id": "CELL-SOCIAL-C",
+        "action": "pause_and_review",
+        "review_status": "accepted",
+        "closure_state": "closed"
+      }
+    ],
+    "stale_reviews": [
+      {
+        "review_id": "REV-SYNTH-002",
+        "cell_id": "CELL-VIDEO-B",
+        "action": "hold_and_test",
+        "review_status": "deferred",
+        "age_days": 39
+      }
+    ],
+    "approval_applied": false,
+    "campaign_state_changed": false,
+    "budget_changes_executed": 0,
+    "platform_writes_executed": 0,
+    "external_actions_executed": 0,
+    "boundary": "Reconciliation exposes accepted feedback and stale deferred reviews for human follow-up; it does not approve, launch, publish or change budget."
   },
   "external_intake": [
     {
@@ -269,6 +302,16 @@
         "src/campaign_copilot/reviewer_feedback_replay.py",
         "data/reviewer_feedback.json",
         "tests/test_reviewer_feedback_replay.py",
+        "reports/trial_report.json"
+      ],
+      "passed": true
+    },
+    {
+      "claim_id": "CAMPAIGN-RECONCILIATION-001",
+      "artifact_paths": [
+        "src/campaign_copilot/review_reconciliation.py",
+        "data/review_history.json",
+        "tests/test_review_reconciliation.py",
         "reports/trial_report.json"
       ],
       "passed": true

@@ -10,7 +10,7 @@ Many small teams need a transparent workflow before they need a fully autonomous
 
 The business scenario is an internal AI-application exploration for Changsha Shiju Trading Co., Ltd. All names, campaign inputs, performance values, and outputs in the repository are synthetic.
 
-## What v0.6 demonstrates
+## What the current prototype demonstrates
 
 - structured campaign briefs and explicit KPI targets;
 - per-cell budget envelopes and one-variable experiment guidance;
@@ -28,7 +28,9 @@ The business scenario is an internal AI-application exploration for Changsha Shi
 - governed replay of accepted creative feedback against an isolated campaign copy;
 - prioritizes recommendations in a human-review experiment queue without changing budgets or launching experiments;
 - exports action-specific completion criteria without applying approvals or performing platform writes;
-- exclusion of pending feedback plus an eight-claim evidence index and clean offline trial;
+- exclusion of pending feedback plus a 13-claim evidence index and clean offline trial;
+- accepted-feedback reconciliation against current campaign review IDs;
+- explicit stale visibility for deferred reviews without approval, budget change or platform write;
 - deterministic tests and a static public demo.
 
 ## Quick start
@@ -57,6 +59,7 @@ Campaign brief
   -> synthetic metric calculation
   -> bounded recommendation draft
   -> human approval required
+  -> reconcile accepted feedback and surface stale deferred reviews
   -> no platform write
 ```
 

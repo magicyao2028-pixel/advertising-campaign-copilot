@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 - 2026-09-09
+
+- added deterministic reconciliation of accepted feedback to current campaign reviews;
+- surfaced stale deferred reviews at an explicit analysis date;
+- preserved human approval, zero budget changes, unchanged campaign state and zero platform writes.
+
 ## 1.0.0 - 2026-09-04
 
 - added accepted-only synthetic reviewer-feedback replay against experiment review history;

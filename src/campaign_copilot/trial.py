@@ -12,6 +12,7 @@ from .experiment_queue import build_experiment_queue
 from .review_export import build_experiment_review_export
 from .review_history import summarize_experiment_review_history
 from .reviewer_feedback_replay import replay_reviewer_feedback
+from .review_reconciliation import reconcile_campaign_review_feedback
 from .models import CampaignBrief, load_campaign
 
 
@@ -94,6 +95,13 @@ def run_trial(root: Path) -> dict[str, Any]:
         json.loads((root / "data/reviewer_feedback.json").read_text(encoding="utf-8")),
         review_history_payload,
     )
+    review_reconciliation = reconcile_campaign_review_feedback(
+        review_export,
+        review_history_payload,
+        reviewer_feedback_replay,
+        as_of_date="2026-09-09",
+        stale_after_days=30,
+    )
     low_information_payload = json.loads((root / "data/sample_campaign.json").read_text(encoding="utf-8"))
     low_information_payload["performance"][0].update({"spend": 100, "impressions": 100, "clicks": 50, "conversions": 10, "revenue": 300})
     low_information = CampaignCopilot().review(CampaignBrief.from_mapping(low_information_payload))
@@ -106,12 +114,12 @@ def run_trial(root: Path) -> dict[str, Any]:
     external = validate_external_intake(load_json_object(root / "evidence/external_intake.json"))
     feedback = validate_feedback(root, load_json_object(root / "evidence/feedback_case.json"))
     replay_safe = all(item["actual"]["release_blocked"] and item["actual"]["optimization_recommendations"] == 0 and item["actual"]["platform_write_executed"] is False for item in replay["replayed"])
-    core_passed = baseline["status"] == "ready_for_human_review" and baseline["governance"]["platform_write_executed"] is False and replay["summary"]["passed"] == 2 and replay_safe and low_information_scale_blocked and queue["platform_writes_executed"] == 0 and queue["items"] and review_export["item_count"] == len(queue["items"]) and review_export["approval_applied"] is False and review_history["entry_count"] == 3 and review_history["platform_writes_executed"] == 0 and review_history["approval_applied"] is False and reviewer_feedback_replay["replayed_count"] == 1 and reviewer_feedback_replay["excluded_count"] == 1 and reviewer_feedback_replay["approval_applied"] is False
+    core_passed = baseline["status"] == "ready_for_human_review" and baseline["governance"]["platform_write_executed"] is False and replay["summary"]["passed"] == 2 and replay_safe and low_information_scale_blocked and queue["platform_writes_executed"] == 0 and queue["items"] and review_export["item_count"] == len(queue["items"]) and review_export["approval_applied"] is False and review_history["entry_count"] == 3 and review_history["platform_writes_executed"] == 0 and review_history["approval_applied"] is False and reviewer_feedback_replay["replayed_count"] == 1 and reviewer_feedback_replay["excluded_count"] == 1 and reviewer_feedback_replay["approval_applied"] is False and review_reconciliation["reconciled_count"] == 1 and review_reconciliation["stale_review_count"] == 1 and review_reconciliation["platform_writes_executed"] == 0 and len(evidence) == 13
     return {
         "schema_version": "1.0", "trial_id": "TRIAL-CAMPAIGN-001", "source_data": "synthetic",
         "overall_passed": core_passed and feedback["passed"] and all(item["passed"] for item in evidence + external),
-        "core_flow": {"passed": core_passed, "baseline_status": baseline["status"], "feedback_cases_passed": replay["summary"]["passed"], "pending_feedback_excluded": replay["summary"]["excluded"], "blocked_cases_emitted_optimization": False, "low_information_scale_blocked": low_information_scale_blocked, "platform_writes_executed": 0},
-        "feedback_regression": feedback, "reviewer_feedback_replay": reviewer_feedback_replay, "external_intake": external, "experiment_queue": queue, "experiment_review_export": review_export, "review_history": review_history, "evidence_index": evidence,
+        "core_flow": {"passed": core_passed, "baseline_status": baseline["status"], "feedback_cases_passed": replay["summary"]["passed"], "pending_feedback_excluded": replay["summary"]["excluded"], "blocked_cases_emitted_optimization": False, "low_information_scale_blocked": low_information_scale_blocked, "evidence_claims": len(evidence), "platform_writes_executed": 0},
+        "feedback_regression": feedback, "reviewer_feedback_replay": reviewer_feedback_replay, "review_reconciliation": review_reconciliation, "external_intake": external, "experiment_queue": queue, "experiment_review_export": review_export, "review_history": review_history, "evidence_index": evidence,
         "boundaries": load_json_object(root / "evidence/evidence_index.json")["boundaries"],
     }
 
@@ -124,7 +132,7 @@ def write_trial_report(root: Path, json_path: Path, markdown_path: Path) -> dict
     markdown_path.write_text("\n".join([
         "# Campaign Copilot Trial Readiness", "", "> Synthetic offline verification; no ad, budget or platform write is executed.", "",
         f"- Overall: **{'PASS' if report['overall_passed'] else 'FAIL'}**", f"- Baseline: `{report['core_flow']['baseline_status']}`",
-        f"- Feedback cases blocked as expected: {report['core_flow']['feedback_cases_passed']}/2", f"- Pending feedback excluded: {report['core_flow']['pending_feedback_excluded']}", f"- Reviewer feedback replay: {report['reviewer_feedback_replay']['replayed_count']} accepted, {report['reviewer_feedback_replay']['excluded_count']} excluded", f"- Low-information scale blocked: {'yes' if report['core_flow']['low_information_scale_blocked'] else 'no'}", f"- Experiment queue items: {len(report['experiment_queue']['items'])}", f"- Review export approvals applied: {report['experiment_review_export']['approval_applied']}", f"- Review-history entries summarized: {report['review_history']['entry_count']}", "",
+        f"- Feedback cases blocked as expected: {report['core_flow']['feedback_cases_passed']}/2", f"- Pending feedback excluded: {report['core_flow']['pending_feedback_excluded']}", f"- Reviewer feedback replay: {report['reviewer_feedback_replay']['replayed_count']} accepted, {report['reviewer_feedback_replay']['excluded_count']} excluded", f"- Feedback reconciled to current reviews: {report['review_reconciliation']['reconciled_count']}", f"- Stale deferred reviews surfaced: {report['review_reconciliation']['stale_review_count']}", f"- Low-information scale blocked: {'yes' if report['core_flow']['low_information_scale_blocked'] else 'no'}", f"- Experiment queue items: {len(report['experiment_queue']['items'])}", f"- Review export approvals applied: {report['experiment_review_export']['approval_applied']}", f"- Review-history entries summarized: {report['review_history']['entry_count']}", "",
         "## Pilot boundary", "", *[f"- {item}" for item in report["boundaries"]], "",
     ]), encoding="utf-8")
     return report
