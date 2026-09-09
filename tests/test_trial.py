@@ -23,7 +23,11 @@ class TrialTests(unittest.TestCase):
         self.assertEqual(report["review_history"]["platform_writes_executed"], 0)
         self.assertEqual(report["review_reconciliation"]["reconciled_count"], 1)
         self.assertEqual(report["review_reconciliation"]["stale_review_count"], 1)
+        self.assertFalse(report["review_reconciliation"]["approval_applied"])
+        self.assertFalse(report["review_reconciliation"]["campaign_state_changed"])
+        self.assertEqual(report["review_reconciliation"]["budget_changes_executed"], 0)
         self.assertEqual(report["review_reconciliation"]["platform_writes_executed"], 0)
+        self.assertEqual(report["review_reconciliation"]["external_actions_executed"], 0)
         self.assertEqual(report["core_flow"]["evidence_claims"], 13)
 
     def test_external_intake_requires_full_sha(self):
